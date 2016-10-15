@@ -1,4 +1,4 @@
-package ru.vlasova.rates.core;
+package ru.vlasova.exchangeRates.core;
 
 /**
  * Created by Алина on 12.10.2016.
@@ -16,10 +16,6 @@ public class Currency {
         this.name = CurrenciesNames.RUB;
     }
 
-    public void setExchange(float exchange) {
-        this.exchange = exchange;
-    }
-
     public float getExchange() {
         return exchange;
     }
@@ -33,3 +29,4 @@ public class Currency {
     }
 
 }
+

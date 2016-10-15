@@ -1,4 +1,4 @@
-package ru.vlasova.rates.core;
+package ru.vlasova.exchangeRates.core;
 
 
 /**
@@ -15,6 +15,7 @@ public enum CurrenciesNames {
     CAD("Канадский доллар"),
     AUD("Австралийский доллар");
 
+    public static final int NUMBER_OF_CURRENCIES = 8;
     private String name;
 
     CurrenciesNames(String name){
@@ -26,4 +27,5 @@ public enum CurrenciesNames {
     }
 
 }
+
 

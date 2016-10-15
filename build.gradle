@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+repositories {
+    mavenLocal();
+    mavenCentral();
+}
+
+dependencies {
+    compile 'org.jsoup:jsoup:1.9.2'
+}
+
