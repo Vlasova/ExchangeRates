@@ -7,16 +7,28 @@ import java.util.Hashtable;
  */
 public class ExchangeRates implements ExchangeRatesAPI{
 
-    private TodayExchanges todayExchanges = new TodayExchanges();
-
     @Override
-    public Float getTodayExchange(CurrenciesNames name) {
-        return todayExchanges.getExchangeByName(name);
+    public float getTodayExchange(CurrenciesNames name) {
+        Currency currency = new Currency(name);
+        return currency.getExchange();
     }
 
     @Override
     public Hashtable<CurrenciesNames, Float> getAllTodayExchanges() {
+        ExchangeTable table = new ExchangeTable();
+        return table.getExchangeTable();
+    }
 
+    @Override
+    public float getExchangeByDate(CurrenciesNames name, String date) {
+        Currency currency = new Currency(name, date);
+        return currency.getExchange();
+    }
+
+    @Override
+    public Hashtable<CurrenciesNames, Float> getAllExchangesByDate(String date) {
+        ExchangeTable table = new ExchangeTable(date);
+        return table.getExchangeTable();
     }
 
     @Override

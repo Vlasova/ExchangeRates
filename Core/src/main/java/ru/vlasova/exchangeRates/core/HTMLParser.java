@@ -4,16 +4,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-
 /**
  * Created by Алина on 15.10.2016.
  */
 public class HTMLParser {
-    private String url = "http://www.cbr.ru/currency_base/daily.aspx?date_req=15.10.2016";
     private Elements links;
 
-    public HTMLParser() {
+    public HTMLParser(String date) {
+        String url = "http://www.cbr.ru/currency_base/daily.aspx?date_req=" + date;
         try {
             Document doc = Jsoup.connect(url).get();
             links = doc.getElementsByTag("tr");
@@ -23,16 +21,17 @@ public class HTMLParser {
         }
     }
 
-    public String getExchangeByName(CurrenciesNames name) {
-        String exchange = "";
-        Elements string;
+    public Float getExchangeByName(CurrenciesNames name) {
+        String stringExchange = null;
         for (int i=1; i<links.size(); i++) {
-            string = links.get(i).select("td");
-            if(string.get(1).text().equals(name.toString())){
-                exchange = string.get(4).text();
+            Elements currency = links.get(i).select("td");
+            if(currency.get(1).text().equals(name.toString())){
+                String str = currency.get(4).text();
+                stringExchange = str.replace(',', '.');
                 break;
             }
         }
+        Float exchange = Float.valueOf(stringExchange);
         return exchange;
     }
 }

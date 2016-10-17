@@ -1,6 +1,5 @@
 package ru.vlasova.exchangeRates.core;
 
-
 /**
  * Created by Алина on 11.10.2016.
  */
@@ -15,14 +14,13 @@ public enum CurrenciesNames {
     CAD("Канадский доллар"),
     AUD("Австралийский доллар");
 
-    public static final int NUMBER_OF_CURRENCIES = 8;
     private String name;
 
     CurrenciesNames(String name){
         this.name = name;
     }
 
-    String getName(){
+    public String getName(){
         return name;
     }
 
