@@ -23,14 +23,17 @@ public class HTMLParser {
 
     public Float getExchangeByName(CurrenciesNames name) {
         String stringExchange = null;
-        for (int i=1; i<links.size(); i++) {
-            Elements currency = links.get(i).select("td");
-            if(currency.get(1).text().equals(name.toString())){
-                String str = currency.get(4).text();
-                stringExchange = str.replace(',', '.');
-                break;
+        if(name != CurrenciesNames.RUB) {
+            for (int i = 1; i < links.size(); i++) {
+                Elements currency = links.get(i).select("td");
+                if (currency.get(1).text().equals(name.toString())) {
+                    String str = currency.get(4).text();
+                    stringExchange = str.replace(',', '.');
+                    break;
+                }
             }
         }
+        else stringExchange = "1";
         Float exchange = Float.valueOf(stringExchange);
         return exchange;
     }
