@@ -15,7 +15,7 @@ public class CurrencyTest {
     @Test
     public void testGetExchange() {
         assertEquals(Float.valueOf(1.0f), Float.valueOf(currency1.getExchange()));
-        assertEquals(Float.valueOf(79.6396f), Float.valueOf(currency2.getExchange()));
+        assertEquals(Float.valueOf(79.6395f), Float.valueOf(currency2.getExchange()));
     }
 
     @Test

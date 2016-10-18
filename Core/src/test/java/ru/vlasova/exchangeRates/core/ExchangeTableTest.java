@@ -23,4 +23,9 @@ public class ExchangeTableTest {
         assertEquals(Float.valueOf(72.9299f), table.getExchangeByName(CurrenciesNames.USD));
     }
 
+    @Test
+    public void testGetDate() {
+        assertEquals("01.01.2016", table.getDate());
+    }
+
 }

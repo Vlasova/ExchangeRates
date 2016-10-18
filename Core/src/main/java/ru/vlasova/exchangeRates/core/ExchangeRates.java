@@ -1,5 +1,9 @@
 package ru.vlasova.exchangeRates.core;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 
 /**
@@ -7,20 +11,30 @@ import java.util.Hashtable;
  */
 public class ExchangeRates implements ExchangeRatesAPI{
 
+    private SimpleDateFormat sdf;
+    private Date date;
+    private String todayDate;
+
+    public ExchangeRates() {
+        sdf = new SimpleDateFormat("dd.MM.yyyy");
+        date = new Date();
+        todayDate = sdf.format(date);
+    }
+
     @Override
-    public float getTodayExchange(CurrenciesNames name) {
-        Currency currency = new Currency(name);
+    public Float getTodayExchange(CurrenciesNames name) {
+        Currency currency = new Currency(name, todayDate);
         return currency.getExchange();
     }
 
     @Override
     public Hashtable<CurrenciesNames, Float> getAllTodayExchanges() {
-        ExchangeTable table = new ExchangeTable();
+        ExchangeTable table = new ExchangeTable(todayDate);
         return table.getExchangeTable();
     }
 
     @Override
-    public float getExchangeByDate(CurrenciesNames name, String date) {
+    public Float getExchangeByDate(CurrenciesNames name, String date) {
         Currency currency = new Currency(name, date);
         return currency.getExchange();
     }
@@ -32,17 +46,26 @@ public class ExchangeRates implements ExchangeRatesAPI{
     }
 
     @Override
-    public boolean isHigher(CurrenciesNames currency) {
-        return false;
+    public boolean isHigher(CurrenciesNames name) {
+        Long time = date.getTime();
+        time -= (24*60*60*1000);
+        String yesterdayDate = sdf.format(new Date(time));
+        Currency todayCurrency = new Currency(name, todayDate);
+        Currency yesterdayCurrency = new Currency(name, yesterdayDate);
+        return todayCurrency.getExchange() > yesterdayCurrency.getExchange();
     }
 
     @Override
-    public void convert(CurrenciesNames originalCurrency, CurrenciesNames finalCurrency, int number) {
-
+    public Float convert(CurrenciesNames originalName, CurrenciesNames finalName, int number) {
+        Currency originalCurrency = new Currency(originalName, todayDate);
+        Currency finalCurrency = new Currency(finalName, todayDate);
+        Float inRubles = originalCurrency.getExchange();
+        Float result = Float.valueOf(inRubles / finalCurrency.getExchange() * number);
+        return (new BigDecimal(result).setScale(2, RoundingMode.HALF_UP).floatValue());
     }
 
     @Override
-    public void getStatistics(CurrenciesNames currency, int time) {
+    public void getStatistics(CurrenciesNames name, int time) {
 
     }
 }
