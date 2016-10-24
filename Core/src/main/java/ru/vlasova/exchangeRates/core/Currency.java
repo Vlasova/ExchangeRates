@@ -30,5 +30,11 @@ public class Currency {
     public String getRussianName() {
         return name.getName();
     }
+
+    public boolean isTodayHigher() {
+        HTMLParser parser = new HTMLParser(new Day().getYesterdayDate());
+        Float yesterdayExchange = parser.getExchangeByName(name);
+        return exchange > yesterdayExchange;
+    }
 }
 

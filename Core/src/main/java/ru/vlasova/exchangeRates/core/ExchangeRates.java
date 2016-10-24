@@ -2,35 +2,32 @@ package ru.vlasova.exchangeRates.core;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * Created by Алина on 15.10.2016.
  */
 public class ExchangeRates implements ExchangeRatesAPI{
 
-    private SimpleDateFormat sdf;
-    private Date date;
-    private String todayDate;
+    private Day day;
 
     public ExchangeRates() {
-        sdf = new SimpleDateFormat("dd.MM.yyyy");
-        date = new Date();
-        todayDate = sdf.format(date);
+        day = new Day();
     }
 
     @Override
     public Float getTodayExchange(CurrenciesNames name) {
-        Currency currency = new Currency(name, todayDate);
+        Currency currency = new Currency(name, day.getTodayDate());
         return currency.getExchange();
     }
 
     @Override
-    public Hashtable<CurrenciesNames, Float> getAllTodayExchanges() {
-        ExchangeTable table = new ExchangeTable(todayDate);
-        return table.getExchangeTable();
+    public Vector<Currency> getAllTodayExchanges() {
+        Vector<Currency> allExchanges = new Vector<>();
+        for(CurrenciesNames name: CurrenciesNames.values()) {
+            allExchanges.add(new Currency(name, day.getTodayDate()));
+        }
+        return  allExchanges;
     }
 
     @Override
@@ -40,33 +37,32 @@ public class ExchangeRates implements ExchangeRatesAPI{
     }
 
     @Override
-    public Hashtable<CurrenciesNames, Float> getAllExchangesByDate(String date) {
-        ExchangeTable table = new ExchangeTable(date);
-        return table.getExchangeTable();
-    }
-
-    @Override
-    public boolean isHigher(CurrenciesNames name) {
-        Long time = date.getTime();
-        time -= (24*60*60*1000);
-        String yesterdayDate = sdf.format(new Date(time));
-        Currency todayCurrency = new Currency(name, todayDate);
-        Currency yesterdayCurrency = new Currency(name, yesterdayDate);
-        return todayCurrency.getExchange() > yesterdayCurrency.getExchange();
+    public Vector<Currency> getAllExchangesByDate(String date) {
+        Vector<Currency> allExchange = new Vector<>();
+        for(CurrenciesNames name: CurrenciesNames.values()) {
+            allExchange.add(new Currency(name, date));
+        }
+        return allExchange;
     }
 
     @Override
     public Float convert(CurrenciesNames originalName, CurrenciesNames finalName, int number) {
-        Currency originalCurrency = new Currency(originalName, todayDate);
-        Currency finalCurrency = new Currency(finalName, todayDate);
+        Currency originalCurrency = new Currency(originalName, day.getTodayDate());
+        Currency finalCurrency = new Currency(finalName, day.getTodayDate());
         Float inRubles = originalCurrency.getExchange();
         Float result = Float.valueOf(inRubles / finalCurrency.getExchange() * number);
         return (new BigDecimal(result).setScale(2, RoundingMode.HALF_UP).floatValue());
     }
 
     @Override
-    public void getStatistics(CurrenciesNames name, int time) {
-
+    public Vector<Currency> getStatistics(CurrenciesNames name, String firstDate, String lastDate) {
+        Vector<Currency> statistics = new Vector<>();
+        statistics.add(new Currency(name, firstDate));
+        while(!firstDate.equals(lastDate)) {
+            firstDate = day.addDay(firstDate);
+            statistics.add(new Currency(name, firstDate));
+        }
+        return statistics;
     }
 }
 

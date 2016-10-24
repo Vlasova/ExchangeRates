@@ -11,6 +11,7 @@ public class CurrencyTest {
 
     Currency currency1 = new Currency();
     Currency currency2 = new Currency(CurrenciesNames.EUR, "01.01.2016");
+    Currency currency3 = new Currency(CurrenciesNames.USD, new Day().getTodayDate());
 
     @Test
     public void testGetExchange() {
@@ -28,5 +29,10 @@ public class CurrencyTest {
     public void testGetRussianName() {
         assertEquals("Российский рубль", currency1.getRussianName());
         assertEquals("Евро", currency2.getRussianName());
+    }
+
+    @Test
+    public void testIsHigher() {
+        assertEquals(false, currency3.isTodayHigher());
     }
 }

@@ -1,14 +1,13 @@
 package ru.vlasova.exchangeRates.core;
 
-import java.util.Hashtable;
+import java.util.Vector;
 
 public interface ExchangeRatesAPI {
 
     Float getTodayExchange(CurrenciesNames name);
-    Hashtable<CurrenciesNames, Float> getAllTodayExchanges();
+    Vector<Currency> getAllTodayExchanges();
     Float getExchangeByDate(CurrenciesNames name, String date);
-    Hashtable<CurrenciesNames, Float> getAllExchangesByDate(String date);
-    boolean isHigher(CurrenciesNames currency);
+    Vector<Currency> getAllExchangesByDate(String date);
     Float convert(CurrenciesNames originalCurrency, CurrenciesNames finalCurrency, int number);
-    void getStatistics(CurrenciesNames currency, int time);
+    Vector<Currency> getStatistics(CurrenciesNames currency, String firstDate, String lastDate);
 }
