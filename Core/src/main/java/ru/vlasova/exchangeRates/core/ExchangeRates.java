@@ -9,11 +9,7 @@ import java.util.Vector;
  */
 public class ExchangeRates implements ExchangeRatesAPI{
 
-    private Day day;
-
-    public ExchangeRates() {
-        day = new Day();
-    }
+    private Day day = new Day();
 
     @Override
     public Float getTodayExchange(CurrenciesNames name) {
@@ -25,7 +21,8 @@ public class ExchangeRates implements ExchangeRatesAPI{
     public Vector<Currency> getAllTodayExchanges() {
         Vector<Currency> allExchanges = new Vector<>();
         for(CurrenciesNames name: CurrenciesNames.values()) {
-            allExchanges.add(new Currency(name, day.getTodayDate()));
+            if(!name.equals(CurrenciesNames.RUB))
+                allExchanges.add(new Currency(name, day.getTodayDate()));
         }
         return  allExchanges;
     }

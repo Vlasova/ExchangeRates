@@ -1,5 +1,8 @@
 package ru.vlasova.exchangeRates.core;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * Created by Алина on 12.10.2016.
  */
@@ -16,7 +19,7 @@ public class Currency {
     public Currency(CurrenciesNames name, String date) {
         this.name = name;
         HTMLParser parser = new HTMLParser(date);
-        exchange = parser.getExchangeByName(name);
+        exchange = new BigDecimal(parser.getExchangeByName(name)).setScale(4, RoundingMode.HALF_UP).floatValue();
     }
 
     public Float getExchange() {
@@ -28,7 +31,7 @@ public class Currency {
     }
 
     public String getRussianName() {
-        return name.getName();
+        return name.getRussianName();
     }
 
     public boolean isTodayHigher() {

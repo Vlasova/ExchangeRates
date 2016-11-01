@@ -9,13 +9,8 @@ import java.util.Date;
  * Created by Алина on 24.10.2016.
  */
 public class Day {
-    private SimpleDateFormat sdf;
-    private Calendar calendar;
-
-    public Day() {
-        sdf = new SimpleDateFormat("dd.MM.yyyy");
-        calendar = Calendar.getInstance();
-    }
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+    private Calendar calendar = Calendar.getInstance();
 
     public String getTodayDate() {
         Date date = calendar.getTime();
@@ -38,5 +33,14 @@ public class Day {
         }
         Date day = calendar.getTime();
         return sdf.format(day);
+    }
+
+    public String getDate(String day) throws Exception {
+        try {
+            Date date = sdf.parse(day);
+            return sdf.format(date);
+        } catch(Exception e) {
+            throw new Exception("Неверный формат даты");
+        }
     }
 }

@@ -20,10 +20,17 @@ public enum CurrenciesNames {
         this.name = name;
     }
 
-    public String getName(){
-        return name;
+    static public CurrenciesNames getName(String name) throws Exception {
+        for(CurrenciesNames currency: CurrenciesNames.values()) {
+            if(currency.toString().equals(name))
+                return currency;
+        }
+        throw new Exception("Неизвестная валюта");
     }
 
+    public String getRussianName() {
+        return name;
+    }
 }
 
 

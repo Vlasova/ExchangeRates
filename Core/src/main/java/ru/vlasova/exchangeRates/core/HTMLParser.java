@@ -15,10 +15,10 @@ public class HTMLParser {
         try {
             Document doc = Jsoup.connect(url).get();
             table = doc.getElementsByTag("tr");
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public Float getExchangeByName(CurrenciesNames name) {
