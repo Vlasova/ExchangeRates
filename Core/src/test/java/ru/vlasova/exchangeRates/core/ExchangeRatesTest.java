@@ -13,37 +13,37 @@ public class ExchangeRatesTest {
 
     @Test
     public void testGetTodayExchange() {
-        assertEquals(Float.valueOf(62.4499f), exchangeRates.getTodayExchange(CurrenciesNames.USD));
-        assertEquals(Float.valueOf(47.1605f), exchangeRates.getTodayExchange(CurrenciesNames.CAD));
+        assertEquals(62.4499f, exchangeRates.getTodayExchange(CurrenciesNames.USD), 0.00001);
+        assertEquals(47.1605f, exchangeRates.getTodayExchange(CurrenciesNames.CAD), 0.00001);
     }
 
     @Test
     public void testGetAllTodayExchange() {
-        assertEquals(Float.valueOf(62.2349f), exchangeRates.getAllTodayExchanges().get(CurrenciesNames.USD.ordinal()).getExchange());
-        assertEquals(Float.valueOf(46.6354f), exchangeRates.getAllTodayExchanges().get(CurrenciesNames.CAD.ordinal()).getExchange());
+        assertEquals(62.2349f, exchangeRates.getAllTodayExchanges().get(CurrenciesNames.USD.ordinal()).getExchange(), 0.00001);
+        assertEquals(46.6354f, exchangeRates.getAllTodayExchanges().get(CurrenciesNames.CAD.ordinal()).getExchange(), 0.00001);
     }
 
     @Test
     public void testGetExchangeByDate() {
-        assertEquals(Float.valueOf(53.3701f), exchangeRates.getExchangeByDate(CurrenciesNames.AUD, "01.01.2016"));
-        assertEquals(Float.valueOf(72.9299f), exchangeRates.getExchangeByDate(CurrenciesNames.USD, "01.01.2016"));
+        assertEquals(53.3701f, exchangeRates.getExchangeByDate(CurrenciesNames.AUD, "01.01.2016"), 0.00001);
+        assertEquals(72.9299f, exchangeRates.getExchangeByDate(CurrenciesNames.USD, "01.01.2016"), 0.00001);
     }
 
     @Test
     public void testGetAllExchangeByDate() {
-        assertEquals(Float.valueOf(53.3701f), exchangeRates.getAllExchangesByDate("01.01.2016").get(CurrenciesNames.AUD.ordinal()).getExchange());
-        assertEquals(Float.valueOf(72.9299f), exchangeRates.getAllExchangesByDate("01.01.2016").get(CurrenciesNames.USD.ordinal()).getExchange());
+        assertEquals(53.3701f, exchangeRates.getAllExchangesByDate("01.01.2016").get(CurrenciesNames.AUD.ordinal()).getExchange(), 0.00001);
+        assertEquals(72.9299f, exchangeRates.getAllExchangesByDate("01.01.2016").get(CurrenciesNames.USD.ordinal()).getExchange(), 0.00001);
     }
 
     @Test
      public void testConvert() {
-        assertEquals(Float.valueOf(1.09f), exchangeRates. convert(CurrenciesNames.EUR, CurrenciesNames.USD, 1));
-        assertEquals(Float.valueOf(1130.8f), exchangeRates.convert(CurrenciesNames.EUR, CurrenciesNames.JPY, 10));
+        assertEquals(1.09f, exchangeRates. convert(CurrenciesNames.EUR, CurrenciesNames.USD, 1), 0.00001);
+        assertEquals(1130.8f, exchangeRates.convert(CurrenciesNames.EUR, CurrenciesNames.JPY, 10), 0.00001);
     }
 
     @Test
     public  void testGetStatistics() {
-        assertEquals(Float.valueOf(64.8306f), exchangeRates.getStatistics(CurrenciesNames.USD, "01.09.2016", "10.09.2016").get(6).getExchange());
-        assertEquals(Float.valueOf(64.1617f), exchangeRates.getStatistics(CurrenciesNames.USD, "01.09.2016", "10.09.2016").get(9).getExchange());
+        assertEquals(64.8306f, exchangeRates.getStatistics(CurrenciesNames.USD, "01.09.2016", "10.09.2016").get(6).getExchange(), 0.00001);
+        assertEquals(64.1617f, exchangeRates.getStatistics(CurrenciesNames.USD, "01.09.2016", "10.09.2016").get(9).getExchange(), 0.00001);
     }
 }

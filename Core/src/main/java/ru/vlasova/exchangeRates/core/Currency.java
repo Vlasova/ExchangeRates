@@ -9,12 +9,7 @@ import java.math.RoundingMode;
 public class Currency {
 
     private CurrenciesNames name;
-    private Float exchange;
-
-    public Currency() {
-        this.name = CurrenciesNames.RUB;
-        exchange = 1.0f;
-    }
+    private float exchange;
 
     public Currency(CurrenciesNames name, String date) {
         this.name = name;
@@ -22,7 +17,7 @@ public class Currency {
         exchange = new BigDecimal(parser.getExchangeByName(name)).setScale(4, RoundingMode.HALF_UP).floatValue();
     }
 
-    public Float getExchange() {
+    public float getExchange() {
         return exchange;
     }
 

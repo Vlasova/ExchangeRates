@@ -4,10 +4,10 @@ import java.util.Vector;
 
 public interface ExchangeRatesAPI {
 
-    Float getTodayExchange(CurrenciesNames name);
+    float getTodayExchange(CurrenciesNames name);
     Vector<Currency> getAllTodayExchanges();
-    Float getExchangeByDate(CurrenciesNames name, String date);
+    float getExchangeByDate(CurrenciesNames name, String date);
     Vector<Currency> getAllExchangesByDate(String date);
-    Float convert(CurrenciesNames originalCurrency, CurrenciesNames finalCurrency, int number);
+    float convert(CurrenciesNames originalCurrency, CurrenciesNames finalCurrency, float number);
     Vector<Currency> getStatistics(CurrenciesNames currency, String firstDate, String lastDate);
 }

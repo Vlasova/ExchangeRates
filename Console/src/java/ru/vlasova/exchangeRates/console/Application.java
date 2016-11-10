@@ -17,45 +17,74 @@ public class Application {
     private Scanner in = new Scanner(System.in);
 
     public void readCommand() {
-        System.out.print("Введите команду: ");
-        String command =in.nextLine();
-        switch(command) {
-            case "на сегодня":
-                printToday();
-                break;
-            case "все на сегодня":
-                printAllToday();
-                break;
-            case "на дату":
-                printByDate();
-                break;
-            case "все на дату":
-                break;
-            case "перевод":
-                break;
-            case "статистика":
-                break;
-            case "помощь":
-                break;
-            case "выход":
-                break;
-            default:
-                break;
+        boolean process = true;
+        while(process) {
+            System.out.print("Введите команду: ");
+            String command = in.nextLine();
+            switch (command.trim()) {
+                case "на сегодня":
+                    printToday();
+                    break;
+                case "все на сегодня":
+                    printAllToday();
+                    break;
+                case "на дату":
+                    printByDate();
+                    break;
+                case "все на дату":
+                    printAllByDate();
+                    break;
+                case "перевод":
+                    convert();
+                    break;
+                case "помощь":
+                    printHelp();
+                    break;
+                case "выход":
+                    process = false;
+                    break;
+                default:
+                    System.out.println("Неизвестная команда");
+                    break;
+            }
+        }
+    }
+
+    private String readDate() throws Exception{
+        try {
+            String date = in.nextLine().trim();
+            Day day = new Day();
+            return day.getDate(date);
+        } catch(Exception e) {
+            throw e;
+        }
+    }
+
+    private CurrenciesNames readName() throws Exception {
+        try {
+            String code = in.nextLine().trim().toUpperCase();
+            return CurrenciesNames.getName(code);
+        } catch(Exception e) {
+            throw e;
+        }
+    }
+
+    private float readNumber() throws Exception {
+        try {
+            return Float.valueOf(in.nextLine());
+        } catch(Exception e) {
+            throw new Exception("Некорректная сумма");
         }
     }
 
     public void printToday() {
-        System.out.print("Введите код валюты: ");
-        String code = in.nextLine();
         try {
-            CurrenciesNames name = CurrenciesNames.getName(code);
+            System.out.print("Введите код валюты: ");
+            CurrenciesNames name = readName();
             System.out.println(name.getRussianName());
             System.out.println("Курс на сегодня: " + exchangeRates.getTodayExchange(name));
         } catch(Exception e) {
-            System.out.println(e.toString());
-        }
-        finally {
-            readCommand();
+            System.out.println(e);
         }
     }
 
@@ -64,24 +93,60 @@ public class Application {
         for(int i=0; i<exchanges.size(); i++) {
             System.out.println(exchanges.get(i).getName() + " " + exchanges.get(i).getExchange());
         }
-        readCommand();
     }
 
     public void printByDate() {
         try {
-            System.out.print("Введите дату: ");
-            String date = in.nextLine();
-            Day day = new Day();
-            String formattedDate = day.getDate(date);
             System.out.print("Введите код валюты: ");
-            String code = in.nextLine();
-            CurrenciesNames name = CurrenciesNames.getName(code);
-            System.out.println("Курс на " + formattedDate);
+            CurrenciesNames name = readName();
+            System.out.print("Введите дату: ");
+            String date = readDate();
+            System.out.println("Курс " + name + " на " + date);
             System.out.println(exchangeRates.getExchangeByDate(name, date));
         } catch (Exception e) {
-            System.out.println(e.toString());
-        } finally {
-            readCommand();
+            System.out.println(e);
+        }
+    }
+
+    public void printAllByDate() {
+        try {
+            System.out.print("Введите дату: ");
+            String date = readDate();
+            Vector<Currency> exchanges = exchangeRates.getAllExchangesByDate(date);
+            for(int i =0; i<exchanges.size(); i++) {
+                System.out.println(exchanges.get(i).getName() + " " + exchanges.get(i).getExchange());
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void convert() {
+        try {
+            System.out.print("Введите код начальной валюты: ");
+            CurrenciesNames originalName = readName();
+            System.out.print("Введите код конечной валюты: ");
+            CurrenciesNames finalName = readName();
+            System.out.print("Введите сумму: ");
+            float number = readNumber();
+            System.out.println(number + " " + originalName + " = " +
+                    exchangeRates.convert(originalName, finalName, number) + " " + finalName);
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void printHelp() {
+        System.out.println("Используйте следующие команды: ");
+        System.out.println("    на сегодня - вывести сегодняшний курс заданной валюты");
+        System.out.println("    все на сегодня - вывести сегодняшние курсы всех доступных валют");
+        System.out.println("    на дату - вывести курс валюты на заданную дату");
+        System.out.println("    все на дату - вывести курсы всех доступных валют на заданную дату");
+        System.out.println("    перевод - конвертировать валюты");
+        System.out.println("    выход - выйти из приложения");
+        System.out.println("На данный момент доступны следующие валюты: ");
+        for(CurrenciesNames name: CurrenciesNames.values()) {
+            System.out.println("    " + name + " " + name.getRussianName());
         }
     }
 }

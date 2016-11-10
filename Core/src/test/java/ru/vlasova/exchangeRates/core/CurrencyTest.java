@@ -9,30 +9,29 @@ import static org.junit.Assert.*;
  */
 public class CurrencyTest {
 
-    Currency currency1 = new Currency();
-    Currency currency2 = new Currency(CurrenciesNames.EUR, "01.01.2016");
-    Currency currency3 = new Currency(CurrenciesNames.USD, new Day().getTodayDate());
+    Currency currency1 = new Currency(CurrenciesNames.EUR, "01.01.2016");
+    Currency currency2 = new Currency(CurrenciesNames.USD, new Day().getTodayDate());
 
     @Test
     public void testGetExchange() {
-        assertEquals(Float.valueOf(1.0f), Float.valueOf(currency1.getExchange()));
-        assertEquals(Float.valueOf(79.6395f), Float.valueOf(currency2.getExchange()));
+        assertEquals(79.6395f, currency1.getExchange(), 0.00001);
+        assertEquals(63.4161f, currency2.getExchange(), 0.00001);
     }
 
     @Test
     public void testGetName() {
-        assertEquals(CurrenciesNames.RUB, currency1.getName());
-        assertEquals(CurrenciesNames.EUR, currency2.getName());
+        assertEquals(CurrenciesNames.EUR, currency1.getName());
+        assertEquals(CurrenciesNames.USD, currency2.getName());
     }
 
     @Test
     public void testGetRussianName() {
-        assertEquals("Российский рубль", currency1.getRussianName());
-        assertEquals("Евро", currency2.getRussianName());
+        assertEquals("Евро", currency1.getRussianName());
+        assertEquals("Доллар США", currency2.getRussianName());
     }
 
     @Test
     public void testIsHigher() {
-        assertEquals(false, currency3.isTodayHigher());
+        assertEquals(true, currency1.isTodayHigher());
     }
 }

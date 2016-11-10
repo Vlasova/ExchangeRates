@@ -12,7 +12,7 @@ public class ExchangeRates implements ExchangeRatesAPI{
     private Day day = new Day();
 
     @Override
-    public Float getTodayExchange(CurrenciesNames name) {
+    public float getTodayExchange(CurrenciesNames name) {
         Currency currency = new Currency(name, day.getTodayDate());
         return currency.getExchange();
     }
@@ -28,7 +28,7 @@ public class ExchangeRates implements ExchangeRatesAPI{
     }
 
     @Override
-    public Float getExchangeByDate(CurrenciesNames name, String date) {
+    public float getExchangeByDate(CurrenciesNames name, String date) {
         Currency currency = new Currency(name, date);
         return currency.getExchange();
     }
@@ -37,13 +37,14 @@ public class ExchangeRates implements ExchangeRatesAPI{
     public Vector<Currency> getAllExchangesByDate(String date) {
         Vector<Currency> allExchange = new Vector<>();
         for(CurrenciesNames name: CurrenciesNames.values()) {
-            allExchange.add(new Currency(name, date));
+            if(!name.equals(CurrenciesNames.RUB))
+                allExchange.add(new Currency(name, date));
         }
         return allExchange;
     }
 
     @Override
-    public Float convert(CurrenciesNames originalName, CurrenciesNames finalName, int number) {
+    public float convert(CurrenciesNames originalName, CurrenciesNames finalName, float number) {
         Currency originalCurrency = new Currency(originalName, day.getTodayDate());
         Currency finalCurrency = new Currency(finalName, day.getTodayDate());
         Float inRubles = originalCurrency.getExchange();

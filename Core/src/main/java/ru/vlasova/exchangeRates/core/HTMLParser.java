@@ -18,10 +18,9 @@ public class HTMLParser {
         } catch(Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    public Float getExchangeByName(CurrenciesNames name) {
+    public float getExchangeByName(CurrenciesNames name) {
         String stringExchange = null;
         int number = 0;
         if(name != CurrenciesNames.RUB) {
@@ -39,7 +38,6 @@ public class HTMLParser {
             stringExchange = "1";
             number = 1;
         }
-        Float exchange = Float.valueOf(stringExchange) / number;
-        return exchange;
+        return Float.valueOf(stringExchange)/number;
     }
 }
