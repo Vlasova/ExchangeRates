@@ -23,7 +23,7 @@ public class DayTest {
 
     @Test
     public void testAddDay() {
-        assertEquals("25.10.2016", day.addDay("24.10.2016"));
+        assertEquals("25.10.2016", day.getNextDay("24.10.2016"));
     }
 
 }

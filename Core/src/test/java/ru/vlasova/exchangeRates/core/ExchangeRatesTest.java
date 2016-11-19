@@ -19,8 +19,8 @@ public class ExchangeRatesTest {
 
     @Test
     public void testGetAllTodayExchange() {
-        assertEquals(62.2349f, exchangeRates.getAllTodayExchanges().get(CurrenciesNames.USD.ordinal()).getExchange(), 0.00001);
-        assertEquals(46.6354f, exchangeRates.getAllTodayExchanges().get(CurrenciesNames.CAD.ordinal()).getExchange(), 0.00001);
+        assertEquals(62.2349f, exchangeRates.getAllTodayExchanges().get(CurrenciesNames.USD.ordinal()-1).getExchange(), 0.00001);
+        assertEquals(46.6354f, exchangeRates.getAllTodayExchanges().get(CurrenciesNames.CAD.ordinal()-1).getExchange(), 0.00001);
     }
 
     @Test
@@ -31,8 +31,8 @@ public class ExchangeRatesTest {
 
     @Test
     public void testGetAllExchangeByDate() {
-        assertEquals(53.3701f, exchangeRates.getAllExchangesByDate("01.01.2016").get(CurrenciesNames.AUD.ordinal()).getExchange(), 0.00001);
-        assertEquals(72.9299f, exchangeRates.getAllExchangesByDate("01.01.2016").get(CurrenciesNames.USD.ordinal()).getExchange(), 0.00001);
+        assertEquals(53.3701f, exchangeRates.getAllExchangesByDate("01.01.2016").get(CurrenciesNames.AUD.ordinal()-1).getExchange(), 0.00001);
+        assertEquals(72.9299f, exchangeRates.getAllExchangesByDate("01.01.2016").get(CurrenciesNames.USD.ordinal()-1).getExchange(), 0.00001);
     }
 
     @Test

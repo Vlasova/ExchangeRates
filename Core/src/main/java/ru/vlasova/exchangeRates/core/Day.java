@@ -6,24 +6,37 @@ import java.util.Date;
 
 
 /**
- * Created by Алина on 24.10.2016.
+ * Класс для работы с датами
  */
 public class Day {
     private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
     private Calendar calendar = Calendar.getInstance();
 
+    /**
+     * Получить сегодняшнюю дату
+     * @return сегодняшняя дата
+     */
     public String getTodayDate() {
         Date date = calendar.getTime();
         return sdf.format(date);
     }
 
+    /**
+     * Получить вчерашнюю дату
+     * @return вчерашняя дата
+     */
     public String getYesterdayDate() {
         calendar.add(Calendar.DATE, -1);
         Date date = calendar.getTime();
         return sdf.format(date);
     }
 
-    public String addDay(String date) {
+    /**
+     * Получить дату, следующую за указанной
+     * @param date дата
+     * @return следующая дата
+     */
+    public String getNextDay(String date) {
         try {
             calendar.setTime(sdf.parse(date));
             calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -35,6 +48,12 @@ public class Day {
         return sdf.format(day);
     }
 
+    /**
+     * Получить отформатированную дату
+     * @param day дата
+     * @return отформатированная дата
+     * @throws Exception при неверно заданной дате
+     */
     public String getDate(String day) throws Exception {
         try {
             Date date = sdf.parse(day);

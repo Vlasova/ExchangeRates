@@ -1,7 +1,7 @@
 package ru.vlasova.exchangeRates.core;
 
 /**
- * Created by Алина on 11.10.2016.
+ * Перечисление доступных валют
  */
 public enum CurrenciesNames {
 

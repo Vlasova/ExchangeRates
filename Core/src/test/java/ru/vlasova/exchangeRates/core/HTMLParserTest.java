@@ -12,6 +12,6 @@ public class HTMLParserTest {
     @Test
     public void testGetExchangeByName() {
         HTMLParser parser = new HTMLParser("01.01.2016");
-        assertEquals(72.9299, parser.getExchangeByName(CurrenciesNames.USD), 0.00001);
+        assertEquals(72.9299f, parser.getExchangeByName(CurrenciesNames.USD), 0.00001);
     }
 }

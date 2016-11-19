@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * Created by Алина on 12.10.2016.
+ * Класс валюта
  */
 public class Currency {
 
@@ -17,21 +17,38 @@ public class Currency {
         exchange = new BigDecimal(parser.getExchangeByName(name)).setScale(4, RoundingMode.HALF_UP).floatValue();
     }
 
+    /**
+     * Получить стоимость валюты
+     * @return стоимость
+     */
     public float getExchange() {
         return exchange;
     }
 
+    /**
+     * Получить буквенный код валюты
+     * @return код
+     */
     public CurrenciesNames getName() {
         return name;
     }
 
+    /**
+     * Получить русское название валюты
+     * @return название
+     */
     public String getRussianName() {
         return name.getRussianName();
     }
 
+    /**
+     * Узнать, увеличилась ли стоимость валюты с предыдущего дня
+     * @return true если курс повысился
+     *         false если курс понизился
+     */
     public boolean isTodayHigher() {
         HTMLParser parser = new HTMLParser(new Day().getYesterdayDate());
-        Float yesterdayExchange = parser.getExchangeByName(name);
+        float yesterdayExchange = parser.getExchangeByName(name);
         return exchange > yesterdayExchange;
     }
 }

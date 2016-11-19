@@ -5,17 +5,19 @@ import ru.vlasova.exchangeRates.core.Currency;
 import ru.vlasova.exchangeRates.core.Day;
 import ru.vlasova.exchangeRates.core.ExchangeRates;
 
+import java.util.List;
 import java.util.Scanner;
-import java.util.Vector;
 
 /**
- * Created by Алина on 31.10.2016.
+ * Консольное приложение
  */
-
 public class Application {
     private ExchangeRates exchangeRates = new ExchangeRates();
     private Scanner in = new Scanner(System.in);
 
+    /**
+     * Считать команду пользователя
+     */
     public void readCommand() {
         boolean process = true;
         while(process) {
@@ -50,6 +52,11 @@ public class Application {
         }
     }
 
+    /**
+     * Считать введенную дату
+     * @return отформатированная дата
+     * @throws Exception при некорректном вводе даты
+     */
     private String readDate() throws Exception{
         try {
             String date = in.nextLine().trim();
@@ -60,6 +67,11 @@ public class Application {
         }
     }
 
+    /**
+     * Считать название валюты
+     * @return название
+     * @throws Exception при некорректном вводе названия валюты
+     */
     private CurrenciesNames readName() throws Exception {
         try {
             String code = in.nextLine().trim().toUpperCase();
@@ -69,6 +81,11 @@ public class Application {
         }
     }
 
+    /**
+     * Считать введенную сумму
+     * @return сумма
+     * @throws Exception при некорректном вводе суммы
+     */
     private float readNumber() throws Exception {
         try {
             return Float.valueOf(in.nextLine());
@@ -77,6 +94,9 @@ public class Application {
         }
     }
 
+    /**
+     * Вывести курс на сегодня
+     */
     public void printToday() {
         try {
             System.out.print("Введите код валюты: ");
@@ -88,13 +108,19 @@ public class Application {
         }
     }
 
+    /**
+     * Вывести курсы всех валют на сегодня
+     */
     public void printAllToday() {
-        Vector<Currency> exchanges = exchangeRates.getAllTodayExchanges();
+        List<Currency> exchanges = exchangeRates.getAllTodayExchanges();
         for(int i=0; i<exchanges.size(); i++) {
             System.out.println(exchanges.get(i).getName() + " " + exchanges.get(i).getExchange());
         }
     }
 
+    /**
+     * Вывести курс валюты на заданную дату
+     */
     public void printByDate() {
         try {
             System.out.print("Введите код валюты: ");
@@ -108,11 +134,14 @@ public class Application {
         }
     }
 
+    /**
+     * Вывести курсы всех валют на заданную дату
+     */
     public void printAllByDate() {
         try {
             System.out.print("Введите дату: ");
             String date = readDate();
-            Vector<Currency> exchanges = exchangeRates.getAllExchangesByDate(date);
+            List<Currency> exchanges = exchangeRates.getAllExchangesByDate(date);
             for(int i =0; i<exchanges.size(); i++) {
                 System.out.println(exchanges.get(i).getName() + " " + exchanges.get(i).getExchange());
             }
@@ -121,6 +150,9 @@ public class Application {
         }
     }
 
+    /**
+     * Конвертировать валюту
+     */
     public void convert() {
         try {
             System.out.print("Введите код начальной валюты: ");
@@ -136,6 +168,9 @@ public class Application {
         }
     }
 
+    /**
+     * Вывести описание команд
+     */
     public void printHelp() {
         System.out.println("Используйте следующие команды: ");
         System.out.println("    на сегодня - вывести сегодняшний курс заданной валюты");

@@ -5,7 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 /**
- * Created by Алина on 15.10.2016.
+ * Класс для получения курсов валют с сайта cbr.ru
  */
 public class HTMLParser {
     private Elements table;
@@ -20,6 +20,11 @@ public class HTMLParser {
         }
     }
 
+    /**
+     * Получить курс валюты по ее названию
+     * @param name название валюты
+     * @return курс
+     */
     public float getExchangeByName(CurrenciesNames name) {
         String stringExchange = null;
         int number = 0;

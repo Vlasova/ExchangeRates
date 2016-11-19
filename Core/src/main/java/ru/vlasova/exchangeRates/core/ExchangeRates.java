@@ -2,10 +2,11 @@ package ru.vlasova.exchangeRates.core;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Алина on 15.10.2016.
+ * Реализация интерфейса приложения
  */
 public class ExchangeRates implements ExchangeRatesAPI{
 
@@ -18,8 +19,8 @@ public class ExchangeRates implements ExchangeRatesAPI{
     }
 
     @Override
-    public Vector<Currency> getAllTodayExchanges() {
-        Vector<Currency> allExchanges = new Vector<>();
+    public List<Currency> getAllTodayExchanges() {
+        List<Currency> allExchanges = new ArrayList<>();
         for(CurrenciesNames name: CurrenciesNames.values()) {
             if(!name.equals(CurrenciesNames.RUB))
                 allExchanges.add(new Currency(name, day.getTodayDate()));
@@ -34,8 +35,8 @@ public class ExchangeRates implements ExchangeRatesAPI{
     }
 
     @Override
-    public Vector<Currency> getAllExchangesByDate(String date) {
-        Vector<Currency> allExchange = new Vector<>();
+    public List<Currency> getAllExchangesByDate(String date) {
+        List<Currency> allExchange = new ArrayList<>();
         for(CurrenciesNames name: CurrenciesNames.values()) {
             if(!name.equals(CurrenciesNames.RUB))
                 allExchange.add(new Currency(name, date));
@@ -47,17 +48,17 @@ public class ExchangeRates implements ExchangeRatesAPI{
     public float convert(CurrenciesNames originalName, CurrenciesNames finalName, float number) {
         Currency originalCurrency = new Currency(originalName, day.getTodayDate());
         Currency finalCurrency = new Currency(finalName, day.getTodayDate());
-        Float inRubles = originalCurrency.getExchange();
-        Float result = Float.valueOf(inRubles / finalCurrency.getExchange() * number);
+        float inRubles = originalCurrency.getExchange();
+        float result = Float.valueOf(inRubles / finalCurrency.getExchange() * number);
         return (new BigDecimal(result).setScale(2, RoundingMode.HALF_UP).floatValue());
     }
 
     @Override
-    public Vector<Currency> getStatistics(CurrenciesNames name, String firstDate, String lastDate) {
-        Vector<Currency> statistics = new Vector<>();
+    public List<Currency> getStatistics(CurrenciesNames name, String firstDate, String lastDate) {
+        List<Currency> statistics = new ArrayList<>();
         statistics.add(new Currency(name, firstDate));
         while(!firstDate.equals(lastDate)) {
-            firstDate = day.addDay(firstDate);
+            firstDate = day.getNextDay(firstDate);
             statistics.add(new Currency(name, firstDate));
         }
         return statistics;
