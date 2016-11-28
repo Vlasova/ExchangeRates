@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
 /**
  * Класс для работы с датами
  */
@@ -19,6 +18,7 @@ public class Day {
     public String getTodayDate() {
         Date date = calendar.getTime();
         return sdf.format(date);
+        // todo return sdf.format(calendar.getTime()); (можно сразу возвращать везде)
     }
 
     /**
@@ -42,7 +42,7 @@ public class Day {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // todo почему тут не бросает дальше, как в методе ниже
         }
         Date day = calendar.getTime();
         return sdf.format(day);

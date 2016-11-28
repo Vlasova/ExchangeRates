@@ -57,14 +57,19 @@ public class Application {
      * @return отформатированная дата
      * @throws Exception при некорректном вводе даты
      */
-    private String readDate() throws Exception{
-        try {
-            String date = in.nextLine().trim();
-            Day day = new Day();
-            return day.getDate(date);
-        } catch(Exception e) {
-            throw e;
-        }
+    private String readDate() throws Exception {
+//        try {
+//            String date = in.nextLine().trim();
+//            Day day = new Day();
+//            return day.getDate(date);
+//        } catch(Exception e) {
+//            throw e;
+//        }
+
+        // todo не нужно такой try catch, если в сигнатуре метода написано throws:
+        String date = in.nextLine().trim();
+        Day day = new Day();
+        return day.getDate(date);
     }
 
     /**

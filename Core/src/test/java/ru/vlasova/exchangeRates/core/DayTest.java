@@ -11,6 +11,7 @@ public class DayTest {
 
     Day day = new Day();
 
+    // todo тесты точно проходят не только 24.10.2016?
     @Test
     public void testGetTodayDate() {
         assertEquals("24.10.2016", day.getTodayDate());

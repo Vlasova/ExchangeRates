@@ -1,4 +1,5 @@
 package ru.vlasova.exchangeRates.core;
+//todo странная структура проекта: кажется, что Core должно быть в src/main/java и т.д
 
 /**
  * Перечисление доступных валют
@@ -20,9 +21,9 @@ public enum CurrenciesNames {
         this.name = name;
     }
 
-    static public CurrenciesNames getName(String name) throws Exception {
+    static public CurrenciesNames getName(String name) throws Exception { // todo создать везде свое исключение
         for(CurrenciesNames currency: CurrenciesNames.values()) {
-            if(currency.toString().equals(name))
+            if(currency.toString().equals(name)) // todo может быть, equalsIgnoreCase();
                 return currency;
         }
         throw new Exception("Неизвестная валюта");

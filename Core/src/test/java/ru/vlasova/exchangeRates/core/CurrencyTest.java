@@ -1,4 +1,5 @@
 package ru.vlasova.exchangeRates.core;
+// todo тесты обычно находятся в src/test/java....
 
 import org.junit.Test;
 
@@ -31,6 +32,8 @@ public class CurrencyTest {
     }
 
     @Test
+    // todo а если наступит день, когда евро будет меньше, чем 01.01.2016?
+    // наверное, стоит взять две даты из прошлого с фиксированным курсом и сравнивать их.
     public void testIsHigher() {
         assertEquals(true, currency1.isTodayHigher());
     }

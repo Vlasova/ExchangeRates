@@ -11,6 +11,8 @@ public class ExchangeRatesTest {
 
     ExchangeRates exchangeRates = new ExchangeRates();
 
+    // todo если я правильно понимаю, тут везде используется дата, которая каждый день меняется, как и курс
+    // Все это наводит на мысль, что можно научить класс Day создаваться с указанной датой.
     @Test
     public void testGetTodayExchange() {
         assertEquals(62.4499f, exchangeRates.getTodayExchange(CurrenciesNames.USD), 0.00001);
