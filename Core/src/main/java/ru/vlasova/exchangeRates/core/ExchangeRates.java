@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Реализация интерфейса приложения
  */
-public class ExchangeRates implements ExchangeRatesAPI{
+public class ExchangeRates implements ExchangeRatesAPI {
 
     private Day day = new Day();
 
@@ -23,6 +23,7 @@ public class ExchangeRates implements ExchangeRatesAPI{
         List<Currency> allExchanges = new ArrayList<>();
         for(CurrenciesNames name: CurrenciesNames.values()) {
             if(!name.equals(CurrenciesNames.RUB))
+                // todo возможно, пусть курс рубля будет 1 к 1. Тогда не придется его везде игнорировать
                 allExchanges.add(new Currency(name, day.getTodayDate()));
         }
         return  allExchanges;
@@ -48,8 +49,10 @@ public class ExchangeRates implements ExchangeRatesAPI{
     public float convert(CurrenciesNames originalName, CurrenciesNames finalName, float number) {
         Currency originalCurrency = new Currency(originalName, day.getTodayDate());
         Currency finalCurrency = new Currency(finalName, day.getTodayDate());
-        float inRubles = originalCurrency.getExchange();
-        float result = Float.valueOf(inRubles / finalCurrency.getExchange() * number);
+//        float inRubles = originalCurrency.getExchange();
+//        float result = Float.valueOf(inRubles / finalCurrency.getExchange() * number);
+        float result = Float.valueOf(originalCurrency.getExchange() / finalCurrency.getExchange() * number);
+
         return (new BigDecimal(result).setScale(2, RoundingMode.HALF_UP).floatValue());
     }
 

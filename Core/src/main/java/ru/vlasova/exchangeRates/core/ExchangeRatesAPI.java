@@ -26,6 +26,7 @@ public interface ExchangeRatesAPI {
      * @param date дата
      * @return курс валюты
      */
+    // todo может быть, перегрузить метод getTodayExchange(CurrenciesNames name)
     float getExchangeByDate(CurrenciesNames name, String date);
 
     /**
@@ -33,6 +34,7 @@ public interface ExchangeRatesAPI {
      * @param date дата
      * @return курсы валют
      */
+    // todo может быть, перегрузить метод List<Currency> getAllTodayExchanges().
     List<Currency> getAllExchangesByDate(String date);
 
     /**

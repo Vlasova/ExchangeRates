@@ -11,6 +11,7 @@ public class HTMLParser {
     private Elements table;
 
     public HTMLParser(String date) {
+        // todo проверить, нормальная ли строка (формат строки). Если плохая, то url будет кривой
         String url = "http://www.cbr.ru/currency_base/daily.aspx?date_req=" + date;
         try {
             Document doc = Jsoup.connect(url).get();
