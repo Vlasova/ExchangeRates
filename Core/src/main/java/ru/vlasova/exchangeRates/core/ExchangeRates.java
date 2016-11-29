@@ -10,50 +10,42 @@ import java.util.List;
  */
 public class ExchangeRates implements ExchangeRatesAPI {
 
-    private Day day = new Day();
-
     @Override
-    public float getTodayExchange(CurrenciesNames name) {
-        Currency currency = new Currency(name, day.getTodayDate());
+    public double getExchange(CurrenciesNames name) {
+        Currency currency = new Currency(name, Day.getTodayDate());
         return currency.getExchange();
     }
 
     @Override
-    public List<Currency> getAllTodayExchanges() {
-        List<Currency> allExchanges = new ArrayList<>();
-        for(CurrenciesNames name: CurrenciesNames.values()) {
-            if(!name.equals(CurrenciesNames.RUB))
-                // todo возможно, пусть курс рубля будет 1 к 1. Тогда не придется его везде игнорировать
-                allExchanges.add(new Currency(name, day.getTodayDate()));
-        }
-        return  allExchanges;
-    }
-
-    @Override
-    public float getExchangeByDate(CurrenciesNames name, String date) {
+    public double getExchange(CurrenciesNames name, String date) {
         Currency currency = new Currency(name, date);
         return currency.getExchange();
     }
 
     @Override
-    public List<Currency> getAllExchangesByDate(String date) {
-        List<Currency> allExchange = new ArrayList<>();
+    public List<Currency> getAllExchanges() {
+        List<Currency> allExchanges = new ArrayList<>();
         for(CurrenciesNames name: CurrenciesNames.values()) {
-            if(!name.equals(CurrenciesNames.RUB))
-                allExchange.add(new Currency(name, date));
+            allExchanges.add(new Currency(name, Day.getTodayDate()));
         }
-        return allExchange;
+        return  allExchanges;
     }
 
     @Override
-    public float convert(CurrenciesNames originalName, CurrenciesNames finalName, float number) {
-        Currency originalCurrency = new Currency(originalName, day.getTodayDate());
-        Currency finalCurrency = new Currency(finalName, day.getTodayDate());
-//        float inRubles = originalCurrency.getExchange();
-//        float result = Float.valueOf(inRubles / finalCurrency.getExchange() * number);
-        float result = Float.valueOf(originalCurrency.getExchange() / finalCurrency.getExchange() * number);
+    public List<Currency> getAllExchanges(String date) {
+        List<Currency> allExchanges = new ArrayList<>();
+        for(CurrenciesNames name: CurrenciesNames.values()) {
+            allExchanges.add(new Currency(name, date));
+        }
+        return allExchanges;
+    }
 
-        return (new BigDecimal(result).setScale(2, RoundingMode.HALF_UP).floatValue());
+    @Override
+    public double convert(CurrenciesNames originalName, CurrenciesNames finalName, double number) {
+        Currency originalCurrency = new Currency(originalName, Day.getTodayDate());
+        Currency finalCurrency = new Currency(finalName, Day.getTodayDate());
+        double result = originalCurrency.getExchange() / finalCurrency.getExchange() * number;
+        return (new BigDecimal(result).setScale(2, RoundingMode.HALF_UP).doubleValue());
     }
 
     @Override
@@ -61,7 +53,7 @@ public class ExchangeRates implements ExchangeRatesAPI {
         List<Currency> statistics = new ArrayList<>();
         statistics.add(new Currency(name, firstDate));
         while(!firstDate.equals(lastDate)) {
-            firstDate = day.getNextDay(firstDate);
+            firstDate = Day.getNextDate(firstDate);
             statistics.add(new Currency(name, firstDate));
         }
         return statistics;

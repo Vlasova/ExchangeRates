@@ -2,9 +2,9 @@ package ru.vlasova.exchangeRates.console;
 
 import ru.vlasova.exchangeRates.core.CurrenciesNames;
 import ru.vlasova.exchangeRates.core.Currency;
-import ru.vlasova.exchangeRates.core.Day;
 import ru.vlasova.exchangeRates.core.ExchangeRates;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -53,61 +53,14 @@ public class Application {
     }
 
     /**
-     * Считать введенную дату
-     * @return отформатированная дата
-     * @throws Exception при некорректном вводе даты
-     */
-    private String readDate() throws Exception {
-//        try {
-//            String date = in.nextLine().trim();
-//            Day day = new Day();
-//            return day.getDate(date);
-//        } catch(Exception e) {
-//            throw e;
-//        }
-
-        // todo не нужно такой try catch, если в сигнатуре метода написано throws:
-        String date = in.nextLine().trim();
-        Day day = new Day();
-        return day.getDate(date);
-    }
-
-    /**
-     * Считать название валюты
-     * @return название
-     * @throws Exception при некорректном вводе названия валюты
-     */
-    private CurrenciesNames readName() throws Exception {
-        try {
-            String code = in.nextLine().trim().toUpperCase();
-            return CurrenciesNames.getName(code);
-        } catch(Exception e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Считать введенную сумму
-     * @return сумма
-     * @throws Exception при некорректном вводе суммы
-     */
-    private float readNumber() throws Exception {
-        try {
-            return Float.valueOf(in.nextLine());
-        } catch(Exception e) {
-            throw new Exception("Некорректная сумма");
-        }
-    }
-
-    /**
      * Вывести курс на сегодня
      */
     public void printToday() {
         try {
             System.out.print("Введите код валюты: ");
-            CurrenciesNames name = readName();
+            CurrenciesNames name = CurrenciesNames.getName(in.nextLine().trim());
             System.out.println(name.getRussianName());
-            System.out.println("Курс на сегодня: " + exchangeRates.getTodayExchange(name));
+            System.out.println("Курс на сегодня: " + exchangeRates.getExchange(name));
         } catch(Exception e) {
             System.out.println(e);
         }
@@ -117,8 +70,8 @@ public class Application {
      * Вывести курсы всех валют на сегодня
      */
     public void printAllToday() {
-        List<Currency> exchanges = exchangeRates.getAllTodayExchanges();
-        for(int i=0; i<exchanges.size(); i++) {
+        List<Currency> exchanges = exchangeRates.getAllExchanges();
+        for(int i=1; i<exchanges.size(); i++) {
             System.out.println(exchanges.get(i).getName() + " " + exchanges.get(i).getExchange());
         }
     }
@@ -129,11 +82,10 @@ public class Application {
     public void printByDate() {
         try {
             System.out.print("Введите код валюты: ");
-            CurrenciesNames name = readName();
+            CurrenciesNames name = CurrenciesNames.getName(in.nextLine().trim());
             System.out.print("Введите дату: ");
-            String date = readDate();
-            System.out.println("Курс " + name + " на " + date);
-            System.out.println(exchangeRates.getExchangeByDate(name, date));
+            String date = in.nextLine().trim();
+            System.out.println(exchangeRates.getExchange(name, date));
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -145,9 +97,9 @@ public class Application {
     public void printAllByDate() {
         try {
             System.out.print("Введите дату: ");
-            String date = readDate();
-            List<Currency> exchanges = exchangeRates.getAllExchangesByDate(date);
-            for(int i =0; i<exchanges.size(); i++) {
+            String date = in.nextLine().trim();
+            List<Currency> exchanges = exchangeRates.getAllExchanges(date);
+            for(int i =1; i<exchanges.size(); i++) {
                 System.out.println(exchanges.get(i).getName() + " " + exchanges.get(i).getExchange());
             }
         } catch(Exception e) {
@@ -161,14 +113,17 @@ public class Application {
     public void convert() {
         try {
             System.out.print("Введите код начальной валюты: ");
-            CurrenciesNames originalName = readName();
+            CurrenciesNames originalName = CurrenciesNames.getName(in.nextLine().trim());
             System.out.print("Введите код конечной валюты: ");
-            CurrenciesNames finalName = readName();
+            CurrenciesNames finalName = CurrenciesNames.getName(in.nextLine().trim());
             System.out.print("Введите сумму: ");
-            float number = readNumber();
+            double number = in.nextDouble();
             System.out.println(number + " " + originalName + " = " +
                     exchangeRates.convert(originalName, finalName, number) + " " + finalName);
-        } catch(Exception e) {
+        } catch(InputMismatchException e) {
+            System.out.println("Некорректная сумма");
+        }
+        catch (Exception e) {
             System.out.println(e);
         }
     }

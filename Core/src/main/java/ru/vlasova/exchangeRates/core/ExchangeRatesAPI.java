@@ -12,13 +12,7 @@ public interface ExchangeRatesAPI {
      * @param name название валюты
      * @return курс валюты
      */
-    float getTodayExchange(CurrenciesNames name);
-
-    /**
-     * Получить курсы всех валют на сегодня
-     * @return курсы валют
-     */
-    List<Currency> getAllTodayExchanges();
+    double getExchange(CurrenciesNames name);
 
     /**
      * Получить курс валюты на заданную дату
@@ -26,16 +20,22 @@ public interface ExchangeRatesAPI {
      * @param date дата
      * @return курс валюты
      */
-    // todo может быть, перегрузить метод getTodayExchange(CurrenciesNames name)
-    float getExchangeByDate(CurrenciesNames name, String date);
+
+    double getExchange(CurrenciesNames name, String date);
+
+    /**
+     * Получить курсы всех валют на сегодня
+     * @return курсы валют
+     */
+    List<Currency> getAllExchanges();
 
     /**
      * Получить курсы всех валют на заданную дату
      * @param date дата
      * @return курсы валют
      */
-    // todo может быть, перегрузить метод List<Currency> getAllTodayExchanges().
-    List<Currency> getAllExchangesByDate(String date);
+
+    List<Currency> getAllExchanges(String date);
 
     /**
      * Конвертировать валюту
@@ -44,7 +44,7 @@ public interface ExchangeRatesAPI {
      * @param number количество
      * @return стоимость в конечной валюте
      */
-    float convert(CurrenciesNames originalCurrency, CurrenciesNames finalCurrency, float number);
+    double convert(CurrenciesNames originalCurrency, CurrenciesNames finalCurrency, double number);
 
     /**
      * Получить статистику изменения курса за указанный период

@@ -9,21 +9,25 @@ import java.math.RoundingMode;
 public class Currency {
 
     private CurrenciesNames name;
-    // todo почему везде float, не double?
-    private float exchange;
+    private double exchange;
+    private String date;
 
     public Currency(CurrenciesNames name, String date) {
-        // todo проверить строку data.
         this.name = name;
-        HTMLParser parser = new HTMLParser(date);
-        exchange = new BigDecimal(parser.getExchangeByName(name)).setScale(4, RoundingMode.HALF_UP)floatValue();
+        this.date = date;
+        if(name.equals(CurrenciesNames.RUB)) {
+            exchange = 1;
+        } else {
+            HTMLParser parser = new HTMLParser(date);
+            exchange = new BigDecimal(parser.getExchangeByName(name)).setScale(4, RoundingMode.HALF_UP).doubleValue();
+        }
     }
 
     /**
      * Получить стоимость валюты
      * @return стоимость
      */
-    public float getExchange() {
+    public double getExchange() {
         return exchange;
     }
 
@@ -48,11 +52,10 @@ public class Currency {
      * @return true если курс повысился
      *         false если курс понизился (или не изменился)
      */
-    public boolean isTodayHigher() {
-        HTMLParser parser = new HTMLParser(new Day().getYesterdayDate());
-        float yesterdayExchange = parser.getExchangeByName(name);
-        return exchange > yesterdayExchange;
-        // todo return exchange > parser.getExchangeByName(name); Может, так интереснее; меньше строк кода...
+
+    public boolean isHigher() {
+        HTMLParser pastDateParser = new HTMLParser(Day.getPastDate(date));
+        return exchange > pastDateParser.getExchangeByName(name);
     }
 }
 

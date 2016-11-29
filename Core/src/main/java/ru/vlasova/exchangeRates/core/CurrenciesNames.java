@@ -1,6 +1,8 @@
 package ru.vlasova.exchangeRates.core;
 //todo странная структура проекта: кажется, что Core должно быть в src/main/java и т.д
 
+import ru.vlasova.exchangeRates.core.Exceptions.NoSuchCurrencyException;
+
 /**
  * Перечисление доступных валют
  */
@@ -21,12 +23,12 @@ public enum CurrenciesNames {
         this.name = name;
     }
 
-    static public CurrenciesNames getName(String name) throws Exception { // todo создать везде свое исключение
+    static public CurrenciesNames getName(String name) throws NoSuchCurrencyException {
         for(CurrenciesNames currency: CurrenciesNames.values()) {
-            if(currency.toString().equals(name)) // todo может быть, equalsIgnoreCase();
+            if(currency.toString().equalsIgnoreCase(name))
                 return currency;
         }
-        throw new Exception("Неизвестная валюта");
+        throw new NoSuchCurrencyException("Неизвестная валюта");
     }
 
     public String getRussianName() {

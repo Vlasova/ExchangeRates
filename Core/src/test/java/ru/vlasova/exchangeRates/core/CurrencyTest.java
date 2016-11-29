@@ -11,12 +11,12 @@ import static org.junit.Assert.*;
 public class CurrencyTest {
 
     Currency currency1 = new Currency(CurrenciesNames.EUR, "01.01.2016");
-    Currency currency2 = new Currency(CurrenciesNames.USD, new Day().getTodayDate());
+    Currency currency2 = new Currency(CurrenciesNames.USD, Day.getPastDate("01.01.2016"));
 
     @Test
     public void testGetExchange() {
-        assertEquals(79.6395f, currency1.getExchange(), 0.00001);
-        assertEquals(63.4161f, currency2.getExchange(), 0.00001);
+        assertEquals(79.6395, currency1.getExchange(), 0.00001);
+        assertEquals(72.8827, currency2.getExchange(), 0.00001);
     }
 
     @Test
@@ -32,9 +32,8 @@ public class CurrencyTest {
     }
 
     @Test
-    // todo а если наступит день, когда евро будет меньше, чем 01.01.2016?
-    // наверное, стоит взять две даты из прошлого с фиксированным курсом и сравнивать их.
     public void testIsHigher() {
-        assertEquals(true, currency1.isTodayHigher());
+        assertEquals(false, currency1.isHigher());
+        assertEquals(true, currency2.isHigher());
     }
 }

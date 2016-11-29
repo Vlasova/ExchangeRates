@@ -9,12 +9,9 @@ import static org.junit.Assert.*;
  */
 public class HTMLParserTest {
 
-    // todo А парсер как раз умеет создаваться с фиксированной датой.
-    // хочется, чтобы метод, получающий дату и имя валюты и возвращающий ее курс, был в API
-    // Тогда класс HTMLParser можно спрятать
     @Test
     public void testGetExchangeByName() {
         HTMLParser parser = new HTMLParser("01.01.2016");
-        assertEquals(72.9299f, parser.getExchangeByName(CurrenciesNames.USD), 0.00001);
+        assertEquals(72.9299, parser.getExchangeByName(CurrenciesNames.USD), 0.00001);
     }
 }

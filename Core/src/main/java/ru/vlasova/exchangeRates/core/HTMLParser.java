@@ -3,6 +3,7 @@ package ru.vlasova.exchangeRates.core;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import ru.vlasova.exchangeRates.core.Exceptions.IllegalDateFormatException;
 
 /**
  * Класс для получения курсов валют с сайта cbr.ru
@@ -10,14 +11,13 @@ import org.jsoup.select.Elements;
 public class HTMLParser {
     private Elements table;
 
-    public HTMLParser(String date) {
-        // todo проверить, нормальная ли строка (формат строки). Если плохая, то url будет кривой
-        String url = "http://www.cbr.ru/currency_base/daily.aspx?date_req=" + date;
+    public HTMLParser(String date) throws IllegalDateFormatException {
+        String url = "http://www.cbr.ru/currency_base/daily.aspx?date_req=" + Day.getDate(date);
         try {
             Document doc = Jsoup.connect(url).get();
             table = doc.getElementsByTag("tr");
         } catch(Exception e) {
-            e.printStackTrace();
+            e.toString();
         }
     }
 
@@ -26,7 +26,7 @@ public class HTMLParser {
      * @param name название валюты
      * @return курс
      */
-    public float getExchangeByName(CurrenciesNames name) {
+    public double getExchangeByName(CurrenciesNames name) {
         String stringExchange = null;
         int number = 0;
         if(name != CurrenciesNames.RUB) {
@@ -44,6 +44,6 @@ public class HTMLParser {
             stringExchange = "1";
             number = 1;
         }
-        return Float.valueOf(stringExchange)/number;
+        return Double.valueOf(stringExchange)/number;
     }
 }
