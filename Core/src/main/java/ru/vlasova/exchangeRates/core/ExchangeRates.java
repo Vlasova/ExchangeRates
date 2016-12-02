@@ -26,7 +26,8 @@ public class ExchangeRates implements ExchangeRatesAPI {
     public List<Currency> getAllExchanges() {
         List<Currency> allExchanges = new ArrayList<>();
         for(CurrenciesNames name: CurrenciesNames.values()) {
-            allExchanges.add(new Currency(name, Day.getTodayDate()));
+            if(!name.equals(CurrenciesNames.RUB))
+                allExchanges.add(new Currency(name, Day.getTodayDate()));
         }
         return  allExchanges;
     }
@@ -35,7 +36,8 @@ public class ExchangeRates implements ExchangeRatesAPI {
     public List<Currency> getAllExchanges(String date) {
         List<Currency> allExchanges = new ArrayList<>();
         for(CurrenciesNames name: CurrenciesNames.values()) {
-            allExchanges.add(new Currency(name, date));
+            if(!name.equals(CurrenciesNames.RUB))
+                allExchanges.add(new Currency(name, date));
         }
         return allExchanges;
     }
