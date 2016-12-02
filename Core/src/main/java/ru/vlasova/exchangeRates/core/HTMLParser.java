@@ -17,8 +17,23 @@ public class HTMLParser {
             Document doc = Jsoup.connect(url).get();
             table = doc.getElementsByTag("tr");
         } catch(Exception e) {
-            e.toString();
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * Получить строку из таблицы для указанной валюты
+     * @param name название валюты
+     * @return строка
+     */
+    private Elements getElements(CurrenciesNames name) {
+        Elements elements = null;
+        for (int i=1; i<table.size(); i++) {
+            elements = table.get(i).select("td");
+            if (elements.get(1).text().equals(name.toString()))
+                break;
+        }
+        return elements;
     }
 
     /**
@@ -28,22 +43,32 @@ public class HTMLParser {
      */
     public double getExchangeByName(CurrenciesNames name) {
         String stringExchange = null;
-        int number = 0;
         if(name != CurrenciesNames.RUB) {
-            for (int i = 1; i < table.size(); i++) {
-                Elements currency = table.get(i).select("td");
-                if (currency.get(1).text().equals(name.toString())) {
-                    number = Integer.valueOf(currency.get(2).text());
-                    String str = currency.get(4).text();
-                    stringExchange = str.replace(',', '.');
-                    break;
-                }
-            }
+            Elements currency = getElements(name);
+            String str = currency.get(4).text();
+            stringExchange = str.replace(',', '.');
         }
         else {
             stringExchange = "1";
-            number = 1;
         }
-        return Double.valueOf(stringExchange)/number;
+        return Double.valueOf(stringExchange);
+    }
+
+    /**
+     * Получить количество единиц валюты
+     * @param name название валюты
+     * @return количество единиц
+     */
+
+    public int getNumberOfUnits(CurrenciesNames name) {
+        int numberOfUnits;
+        if(name != CurrenciesNames.RUB) {
+            Elements currency = getElements(name);
+            numberOfUnits = Integer.valueOf(currency.get(2).text());
+        }
+        else {
+            numberOfUnits = 1;
+        }
+        return  numberOfUnits;
     }
 }

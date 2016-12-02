@@ -11,16 +11,14 @@ public class Currency {
     private CurrenciesNames name;
     private double exchange;
     private String date;
+    private int numberOfUnits;
 
     public Currency(CurrenciesNames name, String date) {
         this.name = name;
         this.date = date;
-        if(name.equals(CurrenciesNames.RUB)) {
-            exchange = 1;
-        } else {
-            HTMLParser parser = new HTMLParser(date);
-            exchange = new BigDecimal(parser.getExchangeByName(name)).setScale(4, RoundingMode.HALF_UP).doubleValue();
-        }
+        HTMLParser parser = new HTMLParser(date);
+        exchange = new BigDecimal(parser.getExchangeByName(name)).setScale(4, RoundingMode.HALF_UP).doubleValue();
+        numberOfUnits = parser.getNumberOfUnits(name);
     }
 
     /**
@@ -56,6 +54,26 @@ public class Currency {
     public boolean isHigher() {
         HTMLParser pastDateParser = new HTMLParser(Day.getPastDate(date));
         return exchange > pastDateParser.getExchangeByName(name);
+    }
+
+    /**
+     * Узнать, уменьшилась ли стоимость валюты с предыдущего дня
+     * @return true если курс понизился
+     *         false если курс повысился или не изменился
+     */
+
+    public boolean isLower() {
+        HTMLParser pastDateParser = new HTMLParser(Day.getPastDate(date));
+        return exchange < pastDateParser.getExchangeByName(name);
+    }
+
+    /**
+     * Получить количество единиц валюты
+     * @return количество единиц
+     */
+
+    public int getNumberOfUnits() {
+        return numberOfUnits;
     }
 }
 

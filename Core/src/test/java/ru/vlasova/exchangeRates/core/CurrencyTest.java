@@ -12,6 +12,7 @@ public class CurrencyTest {
 
     Currency currency1 = new Currency(CurrenciesNames.EUR, "01.01.2016");
     Currency currency2 = new Currency(CurrenciesNames.USD, Day.getPastDate("01.01.2016"));
+    Currency currency3 = new Currency(CurrenciesNames.JPY, "01.01.2016");
 
     @Test
     public void testGetExchange() {
@@ -35,5 +36,17 @@ public class CurrencyTest {
     public void testIsHigher() {
         assertEquals(false, currency1.isHigher());
         assertEquals(true, currency2.isHigher());
+    }
+
+    @Test
+    public void testIsLower() {
+        assertEquals(true, currency1.isLower());
+        assertEquals(false, currency2.isLower());
+    }
+
+    @Test
+    public void testGetNumberOfUnits() {
+        assertEquals(1, currency1.getNumberOfUnits());
+        assertEquals(100, currency3.getNumberOfUnits());
     }
 }
