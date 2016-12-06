@@ -1,54 +1,63 @@
 package ru.vlasova.exchangeRates.GUI;
 
 import ru.vlasova.exchangeRates.core.Currency;
+import ru.vlasova.exchangeRates.core.Day;
 import ru.vlasova.exchangeRates.core.ExchangeRates;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Алина on 02.12.2016.
  */
-public class Rates extends JPanel{
+public class Rates extends JPanel {
 
     ExchangeRates exchangeRates = new ExchangeRates();
 
     Rates() {
+        setOpaque(false);
         setLayout(new BorderLayout());
 
         JTable ratesTable = createTable();
-        add(new JScrollPane(ratesTable), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(ratesTable);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        add(scrollPane);
     }
 
-        private JTable createTable() {
-        RatesTableModel ratesTableModel = new RatesTableModel(exchangeRates.getAllExchanges());
+    private JTable createTable() {
+        List<Currency> currencies = exchangeRates.getAllExchanges();
+        RatesTableModel ratesTableModel = new RatesTableModel(currencies);
         JTable ratesTable = new JTable(ratesTableModel);
-        DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();
-        centerRender.setHorizontalAlignment(SwingConstants.CENTER);
+
+        ratesTable.setRowHeight(40);
+        ratesTable.setOpaque(false);
+        ratesTable.setIntercellSpacing(new Dimension(5, 5));
+        ratesTable.setShowVerticalLines(false);
+        ratesTable.setShowHorizontalLines(false);
+
+        ratesTable.getTableHeader().setPreferredSize(new Dimension(0, 0));
+
+        CellRenderer render = new CellRenderer();
         TableColumn column = null;
-        for(int i=0; i<ratesTable.getColumnCount(); i++) {
+        for (int i = 0; i < ratesTable.getColumnCount(); i++) {
             column = ratesTable.getColumnModel().getColumn(i);
-            if(i == 3) {
+            column.setCellRenderer(render);
+            if (i == 3) {
                 column.setMinWidth(350);
-                column.setCellRenderer(centerRender);
-            }
-            else {
-                column.setCellRenderer(centerRender);
+            } else {
                 column.setMinWidth(100);
             }
             column.setResizable(false);
         }
-        ratesTable.setRowHeight(40);
         return ratesTable;
     }
 
-
-    private class RatesTableModel extends AbstractTableModel {
+    class RatesTableModel extends AbstractTableModel {
 
         private List<Currency> rates = new ArrayList<>();
 
@@ -67,43 +76,68 @@ public class Rates extends JPanel{
         public Object getValueAt(int rowIndex, int columnIndex) {
             Currency currency = rates.get(rowIndex);
             Object obj = new Object();
-            switch(columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    if (rowIndex == 0)
+                        obj = new String("");
+                    else
+                        obj = new String("/" + currency.getName() + ".png");
+                    break;
                 case 1:
-                    obj = currency.getName();
+                    if (rowIndex == 0)
+                        obj = new String("Валюта");
+                    else
+                        obj = currency.getName();
                     break;
                 case 2:
-                    obj = currency.getNumberOfUnits();
+                    if (rowIndex == 0)
+                        obj = new String("Номинал");
+                    else
+                        obj = currency.getNumberOfUnits();
                     break;
                 case 3:
-                    obj = currency.getRussianName();
+                    if (rowIndex == 0)
+                        obj = new String("Наименование");
+                    else
+                        obj = currency.getRussianName();
                     break;
                 case 4:
-                    obj = currency.getExchange();
+                    if (rowIndex == 0)
+                        obj = new String("Курс");
+                    else
+                        obj = currency.getExchange();
                     break;
             }
             return obj;
         }
+    }
 
-        public String getColumnName(int columnIndex) {
-            String str = null;
-            switch (columnIndex) {
-                case 0:
-                    str = "";
-                    break;
-                case 1:
-                    str = "Валюта";
-                    break;
-                case 2:
-                    str = "Номинал";
-                    break;
-                case 3:
-                    str = "Наименование";
-                    break;
-                case 4:
-                    str = "Курс";
-                    break;
+    class CellRenderer extends DefaultTableCellRenderer {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            JLabel label = new JLabel();
+            label.setOpaque(true);
+            label.setHorizontalAlignment(JLabel.CENTER);
+
+            Font font = new Font("verdana", Font.PLAIN, 16);
+            label.setFont(font);
+
+            if (column == 0 && row != 0) {
+                URL path = CellRenderer.class.getResource(value.toString());
+                ImageIcon icon = new ImageIcon(path);
+                label.setIcon(icon);
+                label.setSize(50, 50);
+                label.setBackground(new Color(255, 255, 255, 70));
             }
-            return str;
+            else {
+                label.setText(value.toString());
+                if(row == 0)
+                    label.setBackground(new Color(255, 228, 181));
+                else
+                    label.setBackground(new Color(255, 255, 255, 70));
+            }
+            return label;
         }
     }
 }
+
+

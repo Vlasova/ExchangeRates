@@ -1,20 +1,26 @@
 package ru.vlasova.exchangeRates.GUI;
 
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 /**
  * Created by Алина on 02.12.2016.
  */
-public class ExchangeRatesGUI {
+public class ExchangeRatesGUI extends  JFrame{
         ExchangeRatesGUI() {
-            JFrame frame = new JFrame("Exchange Rates");
-            frame.setSize(1000, 600);
-            frame.setResizable(false);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
+            setTitle("Exchange Rates");
+            setSize(1000, 600);
+            setResizable(false);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setVisible(true);
 
-            JPanel rates = new Rates();
-            frame.add(rates);
+            setContentPane(new RatesPanel());
+            Container container = getContentPane();
+            container.setLayout(new BorderLayout());
+
+            JPanel panel = new Rates();
+            container.add(panel);
         }
 
         public static void main(String[] args) {
@@ -24,4 +30,12 @@ public class ExchangeRatesGUI {
                 }
             });
         }
+}
+
+class RatesPanel extends JPanel {
+    public void paintComponent(Graphics g) {
+        URL path = RatesPanel.class.getResource("/background.jpg");
+        ImageIcon background = new ImageIcon(path);
+        g.drawImage(background.getImage(), 0, 0, this);
+    }
 }
