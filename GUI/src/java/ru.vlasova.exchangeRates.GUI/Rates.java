@@ -7,6 +7,8 @@ import ru.vlasova.exchangeRates.core.ExchangeRates;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +22,49 @@ public class Rates extends JPanel {
 
     Rates() {
         setOpaque(false);
-        setLayout(new BorderLayout());
 
-        JTable ratesTable = createTable();
+        final JComboBox<String> days = getDayComboBox();
+        days.setPreferredSize(new Dimension(250, 25));
+        add(days);
+
+        final JComboBox<String> months = getMonthComboBox();
+        months.setPreferredSize(new Dimension(250, 25));
+        add(months);
+
+        final JComboBox<String> years = getYearComboBox();
+        years.setPreferredSize(new Dimension(250, 25));
+        add(years);
+
+        JButton button = new JButton("Изменить дату");
+        button.setPreferredSize(new Dimension(200, 25));
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                remove(getComponent(4));
+                String date = days.getSelectedItem().toString()+"."+months.getSelectedItem().toString()+"."+years.getSelectedItem().toString();
+                JTable ratesTable = createTable(date);
+                JScrollPane scrollPane = new JScrollPane(ratesTable);
+                scrollPane.setOpaque(false);
+                scrollPane.setPreferredSize(new Dimension(994, 540));
+                scrollPane.getViewport().setOpaque(false);
+                scrollPane.setVisible(true);
+                add(scrollPane);
+            }
+        });
+        add(button);
+
+        JTable ratesTable = createTable(Day.getTodayDate());
         JScrollPane scrollPane = new JScrollPane(ratesTable);
         scrollPane.setOpaque(false);
+        scrollPane.setPreferredSize(new Dimension(994, 540));
         scrollPane.getViewport().setOpaque(false);
         add(scrollPane);
+
     }
 
-    private JTable createTable() {
-        List<Currency> currencies = exchangeRates.getAllExchanges();
-        RatesTableModel ratesTableModel = new RatesTableModel(currencies);
+    private JTable createTable(String date) {
+        List<Currency> currencies = exchangeRates.getAllExchanges(date);
+        RatesTableModel ratesTableModel = new RatesTableModel(currencies, date);
         JTable ratesTable = new JTable(ratesTableModel);
 
         ratesTable.setRowHeight(40);
@@ -57,12 +90,41 @@ public class Rates extends JPanel {
         return ratesTable;
     }
 
+    private JComboBox<String> getYearComboBox() {
+        String[] years = new String[12];
+        years[0]="год";
+        for(int i=1; i<=Day.getYear()-2005; i++){
+            years[i]=Integer.toString(i+2005);
+        }
+        return new JComboBox<>(years);
+    }
+
+    private JComboBox<String> getMonthComboBox(){
+        String[] months = new String[13];
+        months[0] = "месяц";
+        for(int i=1; i<=12; i++){
+            months[i]=Integer.toString(i);
+        }
+        return new JComboBox<>(months);
+    }
+
+    private JComboBox<String> getDayComboBox(){
+        String[] days = new String[32];
+        days[0] = "день";
+        for(int i=1; i<=31; i++){
+            days[i]=Integer.toString(i);
+        }
+        return new JComboBox<>(days);
+    }
+
     class RatesTableModel extends AbstractTableModel {
 
         private List<Currency> rates = new ArrayList<>();
+        private String date;
 
-        RatesTableModel(List<Currency> currencies) {
+        RatesTableModel(List<Currency> currencies, String date) {
             rates = currencies;
+            this.date = date;
         }
 
         public int getColumnCount() {
@@ -79,7 +141,7 @@ public class Rates extends JPanel {
             switch (columnIndex) {
                 case 0:
                     if (rowIndex == 0)
-                        obj = new String("");
+                        obj = new String(date);
                     else
                         obj = new String("/" + currency.getName() + ".png");
                     break;
@@ -121,7 +183,7 @@ public class Rates extends JPanel {
             Font font = new Font("verdana", Font.PLAIN, 16);
             label.setFont(font);
 
-            if (column == 0 && row != 0) {
+            if(column == 0 && row != 0) {
                 URL path = CellRenderer.class.getResource(value.toString());
                 ImageIcon icon = new ImageIcon(path);
                 label.setIcon(icon);
@@ -129,15 +191,22 @@ public class Rates extends JPanel {
                 label.setBackground(new Color(255, 255, 255, 70));
             }
             else {
-                label.setText(value.toString());
+                if(column == 0 && row == 0){
+                    label.setLayout(new BorderLayout());
+                    label.setBackground(new Color(255,228,181));
+                    label.setText(value.toString());
+                }
+                else{
+                    label.setText(value.toString());
                 if(row == 0)
                     label.setBackground(new Color(255, 228, 181));
                 else
                     label.setBackground(new Color(255, 255, 255, 70));
-            }
+            }}
             return label;
         }
     }
+
 }
 
 

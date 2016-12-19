@@ -1,5 +1,7 @@
 package ru.vlasova.exchangeRates.GUI;
 
+import ru.vlasova.exchangeRates.core.Day;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -20,6 +22,7 @@ public class ExchangeRatesGUI extends  JFrame{
             container.setLayout(new BorderLayout());
 
             JPanel panel = new Rates();
+            setLayout(new BoxLayout(getContentPane(), BoxLayout.LINE_AXIS));
             container.add(panel);
         }
 

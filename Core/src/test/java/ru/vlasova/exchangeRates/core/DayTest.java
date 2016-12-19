@@ -27,4 +27,9 @@ public class DayTest {
         assertEquals("02.08.2016", Day.getNextDate("01.08.2016"));
         assertEquals("02.01.2016", Day.getNextDate("01.01.2016"));
     }
+
+    @Test
+    public void testGetYear() {
+        assertEquals(2016, Day.getYear());
+    }
 }

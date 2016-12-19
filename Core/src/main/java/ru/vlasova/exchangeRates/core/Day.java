@@ -2,6 +2,9 @@ package ru.vlasova.exchangeRates.core;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.StringTokenizer;
 
 import ru.vlasova.exchangeRates.core.Exceptions.IllegalDateFormatException;
 
@@ -27,10 +30,39 @@ public class Day {
      */
     public static String getDate(String date) throws IllegalDateFormatException {
         try {
-            return sdf.format(sdf.parse(date));
+            String day = sdf.format(sdf.parse(date));
+            if(isCorrect(day))
+                return day;
+            else throw new IllegalDateFormatException("Неверный формат даты");
         } catch(Exception e) {
             throw new IllegalDateFormatException("Неверный формат даты");
         }
+    }
+
+    private static boolean isCorrect(String date) {
+        StringTokenizer tokenizer = new StringTokenizer(date, ".");
+        String day = tokenizer.nextToken();
+        String month = tokenizer.nextToken();
+        String year = tokenizer.nextToken();
+        if(Integer.parseInt(year)<2006 || Integer.parseInt(year)> GregorianCalendar.getInstance().get(Calendar.YEAR))
+            return false;
+        int intMonth = Integer.parseInt(month);
+        if(Integer.parseInt(month) < 1 || Integer.parseInt(month)>12)
+            return false;
+        int intDay = Integer.parseInt(day);
+        if(intDay<1)
+            return false;
+        int[] days = new int[]{31,29,31,30,31,30,31,31,30,31,30,31};
+        for(int i=0; i<days.length; i++){
+            if(intMonth==i && intDay>days[i])
+                return false;
+        }
+        return true;
+    }
+
+    public static int getYear(){
+        GregorianCalendar calendar = new GregorianCalendar();
+        return calendar.get(Calendar.YEAR);
     }
 
     /**
@@ -84,4 +116,5 @@ public class Day {
         calendar.add(Calendar.DAY_OF_YEAR, 1);
         return sdf.format(calendar.getTime());
     }
+
 }
