@@ -1,7 +1,9 @@
 package ru.vlasova.exchangeRates.GUI;
 
+import javafx.scene.layout.BackgroundImage;
 import ru.vlasova.exchangeRates.core.Currency;
 import ru.vlasova.exchangeRates.core.Day;
+import ru.vlasova.exchangeRates.core.Exceptions.IllegalDateFormatException;
 import ru.vlasova.exchangeRates.core.ExchangeRates;
 
 import javax.swing.*;
@@ -11,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 /**
@@ -22,56 +25,68 @@ public class Rates extends JPanel {
 
     Rates() {
         setOpaque(false);
+        setLayout(new FlowLayout(FlowLayout.LEFT));
+        Font font = new Font("verdana", Font.PLAIN, 14);
 
         final JComboBox<String> days = getDayComboBox();
-        days.setPreferredSize(new Dimension(250, 25));
+        days.setPreferredSize(new Dimension(130, 25));
+        days.setBackground(new Color(35,35,35));
+        days.setFont(font);
+        days.setForeground(Color.white);
         add(days);
 
         final JComboBox<String> months = getMonthComboBox();
-        months.setPreferredSize(new Dimension(250, 25));
+        months.setPreferredSize(new Dimension(130, 25));
+        months.setBackground(new Color(35,35,35));
+        months.setFont(font);
+        months.setForeground(Color.white);
         add(months);
 
         final JComboBox<String> years = getYearComboBox();
-        years.setPreferredSize(new Dimension(250, 25));
+        years.setPreferredSize(new Dimension(130, 25));
+        years.setBackground(new Color(35,35,35));
+        years.setFont(font);
+        years.setForeground(Color.white);
         add(years);
+
+        final JTable ratesTable = new JTable(new RatesTableModel(exchangeRates.getAllExchanges(), Day.getTodayDate()));
+        createTable(ratesTable);
+        JScrollPane scrollPane = new JScrollPane(ratesTable);
+        scrollPane.setOpaque(false);
+        scrollPane.setPreferredSize(new Dimension(990, 540));
+        scrollPane.getViewport().setOpaque(false);
 
         JButton button = new JButton("Изменить дату");
         button.setPreferredSize(new Dimension(200, 25));
+        button.setBackground(new Color(0,150,0));
+        button.setFont(font);
+        button.setForeground(Color.white);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                remove(getComponent(4));
-                String date = days.getSelectedItem().toString()+"."+months.getSelectedItem().toString()+"."+years.getSelectedItem().toString();
-                JTable ratesTable = createTable(date);
-                JScrollPane scrollPane = new JScrollPane(ratesTable);
-                scrollPane.setOpaque(false);
-                scrollPane.setPreferredSize(new Dimension(994, 540));
-                scrollPane.getViewport().setOpaque(false);
-                scrollPane.setVisible(true);
-                add(scrollPane);
+                try {
+                    String date = days.getSelectedItem().toString() + "." + months.getSelectedItem().toString() + "." + years.getSelectedItem().toString();
+                    Day.getDate(date);
+                    ratesTable.setModel(new RatesTableModel(exchangeRates.getAllExchanges(date), date));
+                    createTable(ratesTable);
+                }catch(IllegalDateFormatException exc){
+                    JOptionPane.showMessageDialog(null, exc.getMessage());
+                }
+
             }
         });
         add(button);
-
-        JTable ratesTable = createTable(Day.getTodayDate());
-        JScrollPane scrollPane = new JScrollPane(ratesTable);
-        scrollPane.setOpaque(false);
-        scrollPane.setPreferredSize(new Dimension(994, 540));
-        scrollPane.getViewport().setOpaque(false);
         add(scrollPane);
 
     }
 
-    private JTable createTable(String date) {
-        List<Currency> currencies = exchangeRates.getAllExchanges(date);
-        RatesTableModel ratesTableModel = new RatesTableModel(currencies, date);
-        JTable ratesTable = new JTable(ratesTableModel);
+    private void createTable(JTable ratesTable) {
 
         ratesTable.setRowHeight(40);
         ratesTable.setOpaque(false);
         ratesTable.setIntercellSpacing(new Dimension(5, 5));
-        ratesTable.setShowVerticalLines(false);
         ratesTable.setShowHorizontalLines(false);
+        ratesTable.setShowVerticalLines(false);
 
         ratesTable.getTableHeader().setPreferredSize(new Dimension(0, 0));
 
@@ -87,7 +102,6 @@ public class Rates extends JPanel {
             }
             column.setResizable(false);
         }
-        return ratesTable;
     }
 
     private JComboBox<String> getYearComboBox() {
@@ -103,7 +117,10 @@ public class Rates extends JPanel {
         String[] months = new String[13];
         months[0] = "месяц";
         for(int i=1; i<=12; i++){
-            months[i]=Integer.toString(i);
+            if(i<10)
+                months[i]="0"+Integer.toString(i);
+            else
+                months[i]=Integer.toString(i);
         }
         return new JComboBox<>(months);
     }
@@ -112,7 +129,10 @@ public class Rates extends JPanel {
         String[] days = new String[32];
         days[0] = "день";
         for(int i=1; i<=31; i++){
-            days[i]=Integer.toString(i);
+            if(i<10)
+                days[i]="0"+Integer.toString(i);
+            else
+                days[i]=Integer.toString(i);
         }
         return new JComboBox<>(days);
     }
@@ -182,26 +202,24 @@ public class Rates extends JPanel {
 
             Font font = new Font("verdana", Font.PLAIN, 16);
             label.setFont(font);
+            label.setForeground(Color.WHITE);
 
             if(column == 0 && row != 0) {
                 URL path = CellRenderer.class.getResource(value.toString());
                 ImageIcon icon = new ImageIcon(path);
                 label.setIcon(icon);
                 label.setSize(50, 50);
-                label.setBackground(new Color(255, 255, 255, 70));
+                label.setBackground(new Color(105,105,105,100));
             }
             else {
-                if(column == 0 && row == 0){
-                    label.setLayout(new BorderLayout());
-                    label.setBackground(new Color(255,228,181));
+                if(row == 0){
+                    label.setBackground(new Color(105,105,105, 70));
                     label.setText(value.toString());
                 }
                 else{
                     label.setText(value.toString());
-                if(row == 0)
-                    label.setBackground(new Color(255, 228, 181));
-                else
-                    label.setBackground(new Color(255, 255, 255, 70));
+                    label.setBackground(new Color(105,105,105,100));
+
             }}
             return label;
         }

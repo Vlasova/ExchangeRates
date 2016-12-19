@@ -30,9 +30,8 @@ public class Day {
      */
     public static String getDate(String date) throws IllegalDateFormatException {
         try {
-            String day = sdf.format(sdf.parse(date));
-            if(isCorrect(day))
-                return day;
+            if(isCorrect(date))
+                return date;
             else throw new IllegalDateFormatException("Неверный формат даты");
         } catch(Exception e) {
             throw new IllegalDateFormatException("Неверный формат даты");
@@ -54,7 +53,7 @@ public class Day {
             return false;
         int[] days = new int[]{31,29,31,30,31,30,31,31,30,31,30,31};
         for(int i=0; i<days.length; i++){
-            if(intMonth==i && intDay>days[i])
+            if(intMonth==i && intDay>days[i-1])
                 return false;
         }
         return true;

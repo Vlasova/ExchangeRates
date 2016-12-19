@@ -37,7 +37,7 @@ public class ExchangeRatesGUI extends  JFrame{
 
 class RatesPanel extends JPanel {
     public void paintComponent(Graphics g) {
-        URL path = RatesPanel.class.getResource("/background.jpg");
+        URL path = RatesPanel.class.getResource("/background.png");
         ImageIcon background = new ImageIcon(path);
         g.drawImage(background.getImage(), 0, 0, this);
     }
