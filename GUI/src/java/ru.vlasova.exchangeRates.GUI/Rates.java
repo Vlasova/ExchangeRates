@@ -1,6 +1,5 @@
 package ru.vlasova.exchangeRates.GUI;
 
-import javafx.scene.layout.BackgroundImage;
 import ru.vlasova.exchangeRates.core.Currency;
 import ru.vlasova.exchangeRates.core.Day;
 import ru.vlasova.exchangeRates.core.Exceptions.IllegalDateFormatException;
@@ -13,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 /**
@@ -25,7 +23,7 @@ public class Rates extends JPanel {
 
     Rates() {
         setOpaque(false);
-        setLayout(new FlowLayout(FlowLayout.LEFT));
+        setLayout(new FlowLayout(FlowLayout.CENTER));
         Font font = new Font("verdana", Font.PLAIN, 14);
 
         final JComboBox<String> days = getDayComboBox();
@@ -53,7 +51,7 @@ public class Rates extends JPanel {
         createTable(ratesTable);
         JScrollPane scrollPane = new JScrollPane(ratesTable);
         scrollPane.setOpaque(false);
-        scrollPane.setPreferredSize(new Dimension(990, 540));
+        scrollPane.setPreferredSize(new Dimension(990, 480));
         scrollPane.getViewport().setOpaque(false);
 
         JButton button = new JButton("Изменить дату");
@@ -213,7 +211,7 @@ public class Rates extends JPanel {
             }
             else {
                 if(row == 0){
-                    label.setBackground(new Color(105,105,105, 70));
+                    label.setBackground(new Color(70,70,70,100));
                     label.setText(value.toString());
                 }
                 else{
