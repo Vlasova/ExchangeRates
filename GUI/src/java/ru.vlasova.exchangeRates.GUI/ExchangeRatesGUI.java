@@ -54,7 +54,7 @@ public class ExchangeRatesGUI extends  JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     remove(panel);
-                    panel = new JPanel();
+                    panel = new Statistics();
                     add(panel);
                     repaint();
                     revalidate();
