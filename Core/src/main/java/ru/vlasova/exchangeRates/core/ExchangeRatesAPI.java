@@ -49,9 +49,8 @@ public interface ExchangeRatesAPI {
     /**
      * Получить статистику изменения курса за указанный период
      * @param currency валюта
-     * @param firstDate начальная дата
-     * @param lastDate конечная дата
+     * @param period период
      * @return статистика
      */
-    List<Currency> getStatistics(CurrenciesNames currency, String firstDate, String lastDate);
+    List<Currency> getStatistics(CurrenciesNames currency, String period);
 }

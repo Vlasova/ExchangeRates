@@ -82,6 +82,33 @@ public class Day {
         }
     }
 
+    public static String get3PastDate(String date) throws IllegalDateFormatException{
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(date));
+            calendar.add(Calendar.DAY_OF_YEAR, -3);
+            return sdf.format(calendar.getTime());
+        }catch(Exception e){
+            throw new IllegalDateFormatException("Неверный формат даты");
+        }
+    }
+
+    public static String getMonthPlusDate(String date) throws IllegalDateFormatException{
+        int[] days = new int[]{31,29,31,30,31,30,31,31,30,31,30,31};
+        try{
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(date));
+            int month = calendar.get(Calendar.MONTH);
+            if(month==11)
+                calendar.add(Calendar.DAY_OF_YEAR, 31);
+            else
+                calendar.add(Calendar.DAY_OF_YEAR, days[month]);
+            return sdf.format(calendar.getTime());
+        }catch(Exception e){
+            throw new IllegalDateFormatException("Неверный формат даты");
+        }
+    }
+
     /**
      * Получить вчерашнюю дату
      * @return вчерашняя дата
@@ -110,10 +137,31 @@ public class Day {
         }
     }
 
-    public static String getTommorowDate() {
+    public static String getWeekAgoDate() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
         return sdf.format(calendar.getTime());
     }
 
+    public static String getMonthAgoDate(String date) throws IllegalDateFormatException{
+        try {
+            int[] days = new int[]{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(date));
+            int month = calendar.get(Calendar.MONTH);
+            if(month==0)
+                calendar.add(Calendar.DAY_OF_YEAR, -31);
+            else
+                calendar.add(Calendar.DAY_OF_YEAR, -days[month - 1]);
+            return sdf.format(calendar.getTime());
+        }catch(Exception e){
+            throw  new IllegalDateFormatException("Неверный формат даты");
+        }
+    }
+
+    public static String getYearAgoDate(){
+        Calendar calendar  = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -366);
+        return sdf.format(calendar.getTime());
+    }
 }

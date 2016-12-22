@@ -49,12 +49,39 @@ public class ExchangeRates implements ExchangeRatesAPI {
     }
 
     @Override
-    public List<Currency> getStatistics(CurrenciesNames name, String firstDate, String lastDate) {
+    public List<Currency> getStatistics(CurrenciesNames name, String period) {
         List<Currency> statistics = new ArrayList<>();
-        statistics.add(new Currency(name, firstDate));
-        while(!firstDate.equals(lastDate)) {
-            firstDate = Day.getNextDate(firstDate);
+        if(period.equals("за неделю")) {
+            String firstDate = Day.getWeekAgoDate();
+            String lastDate = Day.getTodayDate();
             statistics.add(new Currency(name, firstDate));
+            while (!firstDate.equals(lastDate)) {
+                firstDate = Day.getNextDate(firstDate);
+                statistics.add(new Currency(name, firstDate));
+            }
+        }
+
+        if(period.equals("за месяц")){
+            String firstDate = Day.getMonthAgoDate(Day.getTodayDate());
+            String lastDate = Day.getTodayDate();
+            statistics.add(new Currency(name,firstDate));
+            int i = 1;
+            while(!firstDate.equals(lastDate)){
+                firstDate = Day.getNextDate(firstDate);
+                if((i%3)==0)
+                    statistics.add(new Currency(name,firstDate));
+                i++;
+            }
+        }
+
+        if(period.equals("за год")){
+            String firstDate = Day.getYearAgoDate();
+            String lastDate = Day.getTodayDate();
+            statistics.add(new Currency(name, firstDate));
+            for(int i=0; i<12; i++){
+                firstDate = Day.getMonthPlusDate(firstDate);
+                statistics.add(new Currency(name, firstDate));
+            }
         }
         return statistics;
     }

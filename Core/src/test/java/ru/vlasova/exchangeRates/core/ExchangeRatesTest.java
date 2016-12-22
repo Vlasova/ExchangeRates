@@ -28,10 +28,4 @@ public class ExchangeRatesTest {
         assertEquals(1.09, exchangeRates. convert(CurrenciesNames.EUR, CurrenciesNames.USD, 1), 0.00001);
         assertEquals(1130.8, exchangeRates.convert(CurrenciesNames.EUR, CurrenciesNames.JPY, 10), 0.00001);
     }
-
-    @Test
-    public  void testGetStatistics() {
-        assertEquals(64.8306, exchangeRates.getStatistics(CurrenciesNames.USD, "01.09.2016", "10.09.2016").get(6).getExchange(), 0.00001);
-        assertEquals(64.1617, exchangeRates.getStatistics(CurrenciesNames.USD, "01.09.2016", "10.09.2016").get(9).getExchange(), 0.00001);
-    }
 }

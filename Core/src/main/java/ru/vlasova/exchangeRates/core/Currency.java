@@ -75,5 +75,28 @@ public class Currency {
     public int getNumberOfUnits() {
         return numberOfUnits;
     }
+
+    public String getDate(){
+        return date;
+    }
+
+    public double getDifference(){
+        HTMLParser pastDateParser = new HTMLParser(Day.getPastDate(date));
+        double difference = exchange - pastDateParser.getExchangeByName(name);
+        return new BigDecimal(difference).setScale(4, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public double get3DaysDifference(){
+        HTMLParser pastDateParser = new HTMLParser(Day.get3PastDate(date));
+        double difference = exchange - pastDateParser.getExchangeByName(name);
+        return new BigDecimal(difference).setScale(4, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public double getMonthDifference(){
+        HTMLParser pastDateParser = new HTMLParser(Day.getMonthAgoDate(date));
+        double difference = exchange - pastDateParser.getExchangeByName(name);
+        return new BigDecimal(difference).setScale(4, RoundingMode.HALF_UP).doubleValue();
+    }
+
 }
 

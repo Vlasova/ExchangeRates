@@ -1,121 +1,230 @@
 package ru.vlasova.exchangeRates.GUI;
 
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.NumberAxis;
-import ru.vlasova.exchangeRates.core.CurrenciesNames;
-import ru.vlasova.exchangeRates.core.Day;
-import ru.vlasova.exchangeRates.core.ExchangeRates;
+import ru.vlasova.exchangeRates.core.*;
+import ru.vlasova.exchangeRates.core.Currency;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.List;
 
 public class Statistics extends JPanel {
     ExchangeRates exchangeRates = new ExchangeRates();
-    private Font font = new Font("verdana", Font.PLAIN, 16);
+    private Font font = new Font("verdana", Font.PLAIN, 14);
 
     Statistics() {
         setOpaque(false);
         setLayout(new FlowLayout(FlowLayout.CENTER));
-        setPreferredSize(new Dimension(900, 400));
+        setPreferredSize(new Dimension(1000, 800));
 
-        final JComboBox<CurrenciesNames> currency = new JComboBox<>(CurrenciesNames.values());
-        currency.setPreferredSize(new Dimension(70, 30));
-        currency.setBackground(new Color(35,35,35));
+        final JComboBox<String> currency = new JComboBox<>(getCurrencies());
+        currency.setPreferredSize(new Dimension(70, 25));
+        currency.setBackground(new Color(35, 35, 35));
         currency.setFont(font);
         currency.setForeground(Color.white);
 
-        JLabel selectCurrency = new JLabel("Ввыберете валюту");
-        selectCurrency.setPreferredSize(new Dimension(450, 100));
+        JLabel selectCurrency = new JLabel("Динамика курса");
+        selectCurrency.setPreferredSize(new Dimension(200, 30));
         selectCurrency.setHorizontalAlignment(JLabel.RIGHT);
         selectCurrency.setFont(font);
         selectCurrency.setForeground(Color.white);
 
-        JLabel begin = new JLabel("Начальная дата");
-        begin.setPreferredSize(new Dimension(400,100));
-        begin.setHorizontalAlignment(JLabel.RIGHT);
-        begin.setFont(font);
-        begin.setForeground(Color.white);
+        final JRadioButton boxWeek = new JRadioButton("за неделю");
+        boxWeek.setPreferredSize(new Dimension(110, 25));
+        boxWeek.setOpaque(false);
+        boxWeek.setFont(font);
+        boxWeek.setForeground(Color.white);
 
-        JLabel end = new JLabel("Конечная дата");
-        end.setPreferredSize(new Dimension(100,100));
-        end.setFont(font);
-        end.setForeground(Color.white);
+        final JRadioButton boxMonth = new JRadioButton("за месяц");
+        boxMonth.setPreferredSize(new Dimension(100, 25));
+        boxMonth.setOpaque(false);
+        boxMonth.setFont(font);
+        boxMonth.setForeground(Color.white);
 
-        final JComboBox<String> sinceDay = getDayComboBox();
-        final JComboBox<String> sinceMonth = getMonthComboBox();
-        final JComboBox<String> sinceYear = getYearComboBox();
-        final JComboBox<String> toDay = getDayComboBox();
-        final JComboBox<String> toMonth = getMonthComboBox();
-        final JComboBox<String> toYear = getYearComboBox();
+        final JRadioButton boxYear = new JRadioButton("за год");
+        boxYear.setPreferredSize(new Dimension(100, 25));
+        boxYear.setOpaque(false);
+        boxYear.setFont(font);
+        boxYear.setForeground(Color.white);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(boxWeek);
+        group.add(boxMonth);
+        group.add(boxYear);
+        boxWeek.setSelected(true);
+
+        final JTable table = new JTable(new StatisticsTableModel(exchangeRates.getStatistics(CurrenciesNames.USD, "за неделю"), CurrenciesNames.USD, "за неделю"));
+        createTable(table);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setOpaque(false);
+        scrollPane.setPreferredSize(new Dimension(990, 500));
+        scrollPane.getViewport().setOpaque(false);
+
+        JButton button = new JButton("получить");
+        button.setPreferredSize(new Dimension(150, 25));
+        button.setFont(font);
+        button.setForeground(Color.white);
+        button.setBackground(new Color(0, 150, 0));
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Currency> currencies = new ArrayList<Currency>();
+                if (boxWeek.isSelected()) {
+                    currencies = exchangeRates.getStatistics(CurrenciesNames.getName(currency.getSelectedItem().toString()), boxWeek.getText());
+                    table.setModel(new StatisticsTableModel(currencies, CurrenciesNames.getName(currency.getSelectedItem().toString()), boxWeek.getText()));
+                    createTable(table);
+                }
+
+                if (boxMonth.isSelected()) {
+                    currencies = exchangeRates.getStatistics(CurrenciesNames.getName(currency.getSelectedItem().toString()), boxMonth.getText());
+                    table.setModel(new StatisticsTableModel(currencies, CurrenciesNames.getName(currency.getSelectedItem().toString()), boxMonth.getText()));
+                    createTable(table);
+                }
+
+                if(boxYear.isSelected()) {
+                    currencies = exchangeRates.getStatistics(CurrenciesNames.getName(currency.getSelectedItem().toString()), boxYear.getText());
+                    table.setModel(new StatisticsTableModel(currencies, CurrenciesNames.getName(currency.getSelectedItem().toString()), boxYear.getText()));
+                    createTable(table);
+                }
+            }
+        });
 
         add(selectCurrency);
         add(currency);
-        add(begin);
-        add(sinceDay);
-        add(sinceMonth);
-        add(sinceYear);
-        add(end);
-        add(toDay);
-        add(toMonth);
-        add(toYear);
-
+        add(boxWeek);
+        add(boxMonth);
+        add(boxYear);
+        add(button);
+        add(scrollPane);
     }
 
-    /**private JFreeChart createGraf(){
+    private String[] getCurrencies() {
+        String[] currencies = new String[CurrenciesNames.values().length - 1];
+        for (int i = 0; i < CurrenciesNames.values().length - 1; i++)
+            currencies[i] = CurrenciesNames.values()[i + 1].toString();
+        return currencies;
+    }
 
-        DateAxis dateAxic = new DateAxis("Дата");
-        dateAxic.setPositiveArrowVisible(true);
+    private void createTable(JTable table) {
+        table.setRowHeight(40);
+        table.setPreferredSize(new Dimension(990, 600));
+        table.setOpaque(false);
+        table.setIntercellSpacing(new Dimension(5, 5));
+        table.setShowHorizontalLines(false);
+        table.setShowVerticalLines(false);
+        table.getTableHeader().setPreferredSize(new Dimension(0, 0));
 
-        NumberAxis rateAxic = new NumberAxis("Курс");
-        rateAxic.setPositiveArrowVisible(true);
-    }*/
-
-    private JComboBox<String> getYearComboBox() {
-        String[] years = new String[12];
-        years[0]="год";
-        for(int i = 1; i<= Day.getYear()-2005; i++){
-            years[i]=Integer.toString(i+2005);
+        TableColumn column = null;
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            column = table.getColumnModel().getColumn(i);
+            column.setCellRenderer(new CellRender());
+            if (i == 2) {
+                column.setMinWidth(250);
+            } else {
+                column.setMinWidth(350);
+            }
+            column.setResizable(false);
         }
-        JComboBox<String> box = new JComboBox<>(years);
-        box.setPreferredSize(new Dimension(80, 25));
-        box.setBackground(new Color(35,35,35));
-        box.setFont(font);
-        box.setForeground(Color.white);
-        return box;
     }
 
-    private JComboBox<String> getMonthComboBox(){
-        String[] months = new String[13];
-        months[0] = "месяц";
-        for(int i=1; i<=12; i++){
-            if(i<10)
-                months[i]="0"+Integer.toString(i);
-            else
-                months[i]=Integer.toString(i);
+    class StatisticsTableModel extends AbstractTableModel {
+        private List<Currency> statistics = new ArrayList<>();
+        private CurrenciesNames name;
+        private String period;
+
+        StatisticsTableModel(List<Currency> statistics, CurrenciesNames name, String period) {
+            this.statistics = statistics;
+            this.name = name;
+            this.period = period;
         }
-        JComboBox<String> box = new JComboBox<>(months);
-        box.setPreferredSize(new Dimension(80, 25));
-        box.setBackground(new Color(35,35,35));
-        box.setFont(font);
-        box.setForeground(Color.white);
-        return box;
+
+        public int getColumnCount() {
+            return 3;
+        }
+
+        public int getRowCount() {
+            return statistics.size();
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Currency currency = statistics.get(rowIndex);
+            Object obj = new Object();
+            switch (columnIndex) {
+                case 0:
+                    if (rowIndex == 0)
+                        obj = new String("Дата");
+                    else
+                        obj = currency.getDate();
+                    break;
+                case 1:
+                    if (rowIndex == 0)
+                        obj = new String("Курс");
+                    else
+                        obj = currency.getExchange();
+                    break;
+                case 2:
+                    if (rowIndex == 0)
+                        obj = new String("");
+                    else {
+                        if (period.equals("за неделю")) {
+                            if (currency.isHigher())
+                                obj = new String("+" + currency.getDifference());
+                            else
+                                obj = currency.getDifference();
+                        }
+                        if (period.equals("за месяц")) {
+                            if (currency.get3DaysDifference() > 0)
+                                obj = new String("+" + currency.get3DaysDifference());
+                            else
+                                obj = currency.get3DaysDifference();
+                        }
+                        if(period.equals("за год")){
+                            if(currency.getMonthDifference() > 0)
+                                obj = new String("+" + currency.getMonthDifference());
+                            else
+                                obj = currency.getMonthDifference();
+                        }
+                    }
+                    break;
+            }
+            return obj;
+            }
+        }
     }
 
-    private JComboBox<String> getDayComboBox(){
-        String[] days = new String[32];
-        days[0] = "день";
-        for(int i=1; i<=31; i++){
-            if(i<10)
-                days[i]="0"+Integer.toString(i);
-            else
-                days[i]=Integer.toString(i);
+        class CellRender extends DefaultTableCellRenderer {
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JLabel label = new JLabel();
+                label.setOpaque(true);
+                label.setHorizontalAlignment(JLabel.CENTER);
+
+                Font font = new Font("verdana", Font.PLAIN, 16);
+                label.setFont(font);
+                label.setForeground(Color.WHITE);
+
+                if (row == 0) {
+                    label.setBackground(new Color(70, 70, 70, 100));
+                    label.setText(value.toString());
+                } else {
+                    if (column == 2) {
+                        if (Double.valueOf(value.toString()) > 0) {
+                            label.setForeground(Color.GREEN);
+                            label.setText(value.toString());
+                        }
+                        if (Double.valueOf(value.toString()) < 0) {
+                            label.setForeground(Color.red);
+                            label.setText(value.toString());
+                        }
+                        label.setBackground(new Color(105, 105, 105, 100));
+                    } else
+                        label.setBackground(new Color(105, 105, 105, 100));
+                    label.setText(value.toString());
+                }
+                return label;
+            }
         }
-        JComboBox<String> box = new JComboBox<>(days);
-        box.setPreferredSize(new Dimension(80, 25));
-        box.setBackground(new Color(35,35,35));
-        box.setFont(font);
-        box.setForeground(Color.white);
-        return box;
-    }
-}
