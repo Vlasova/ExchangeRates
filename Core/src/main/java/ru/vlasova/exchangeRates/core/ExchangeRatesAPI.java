@@ -2,9 +2,6 @@ package ru.vlasova.exchangeRates.core;
 
 import java.util.List;
 
-/**
- * Интерфейс приложения
- */
 public interface ExchangeRatesAPI {
 
     /**
@@ -12,7 +9,7 @@ public interface ExchangeRatesAPI {
      * @param name название валюты
      * @return курс валюты
      */
-    double getExchange(CurrenciesNames name);
+     double getExchange(CurrenciesNames name);
 
     /**
      * Получить курс валюты на заданную дату

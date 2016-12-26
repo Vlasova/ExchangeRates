@@ -144,4 +144,9 @@ public class Application {
             System.out.println("    " + name + " " + name.getRussianName());
         }
     }
+
+    public static void main(String[] args) {
+        Application app = new Application();
+        app.readCommand();
+    }
 }

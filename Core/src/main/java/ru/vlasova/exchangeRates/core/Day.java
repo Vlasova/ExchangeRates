@@ -38,6 +38,12 @@ public class Day {
         }
     }
 
+    /**
+     * Проверить формат даты
+     * @param date дата
+     * @return true если формат верный
+     */
+
     private static boolean isCorrect(String date) {
         StringTokenizer tokenizer = new StringTokenizer(date, ".");
         String day = tokenizer.nextToken();
@@ -58,6 +64,11 @@ public class Day {
         }
         return true;
     }
+
+    /**
+     * Получить текущий год
+     * @return год
+     */
 
     public static int getYear(){
         GregorianCalendar calendar = new GregorianCalendar();

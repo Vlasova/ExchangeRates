@@ -218,7 +218,7 @@ public class Rates extends JPanel {
                     label.setText(value.toString());
                     label.setBackground(new Color(105,105,105,100));
 
-            }}
+                }}
             return label;
         }
     }

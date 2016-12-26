@@ -76,9 +76,19 @@ public class Currency {
         return numberOfUnits;
     }
 
+    /**
+     * Получить дату
+     * @return дата
+     */
+
     public String getDate(){
         return date;
     }
+
+    /**
+     * Узнать, на сколько курс изменился за день
+     * @return изменение
+     */
 
     public double getDifference(){
         HTMLParser pastDateParser = new HTMLParser(Day.getPastDate(date));
@@ -86,11 +96,21 @@ public class Currency {
         return new BigDecimal(difference).setScale(4, RoundingMode.HALF_UP).doubleValue();
     }
 
+    /**
+     * Узнать, на сколько курс изменился за 3 дня
+     * @return изменение
+     */
+
     public double get3DaysDifference(){
         HTMLParser pastDateParser = new HTMLParser(Day.get3PastDate(date));
         double difference = exchange - pastDateParser.getExchangeByName(name);
         return new BigDecimal(difference).setScale(4, RoundingMode.HALF_UP).doubleValue();
     }
+
+    /**
+     * Узнать, на сколько курс изменился за месяц
+     * @return изменение
+     */
 
     public double getMonthDifference(){
         HTMLParser pastDateParser = new HTMLParser(Day.getMonthAgoDate(date));
